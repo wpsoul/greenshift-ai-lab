@@ -14,11 +14,9 @@
   "author": "wpsoul",
   "license": "ISC",
   "devDependencies": {
-    "@wordpress/scripts": "^20.0.1"
+    "@wordpress/scripts": "^26.4.0"
   },
   "dependencies": {
-    "@splinetool/react-spline": "^2.2.1",
-    "@splinetool/runtime": "^0.9.66",
     "prism-react-renderer": "^2.0.4"
   }
 }
