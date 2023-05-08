@@ -1,0 +1,23 @@
+{
+  "name": "greenshiftspline",
+  "version": "0.1.0",
+  "description": "Marketing addon",
+  "main": "index.js",
+  "scripts": {
+    "start": "wp-scripts start",
+    "build": "wp-scripts build",
+    "check-engines": "wp-scripts check-engines",
+    "packages-update": "wp-scripts packages-update",
+    "lint:js": "wp-scripts lint-js",
+    "lint:style": "wp-scripts lint-style"
+  },
+  "author": "wpsoul",
+  "license": "ISC",
+  "devDependencies": {
+    "@wordpress/scripts": "^20.0.1"
+  },
+  "dependencies": {
+    "@splinetool/react-spline": "^2.2.1",
+    "@splinetool/runtime": "^0.9.66"
+  }
+}
