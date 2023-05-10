@@ -1,11 +1,11 @@
-=== Greenshift Spline 3d for Gutenberg ===
+=== Greenshift AI Lab for Gutenberg ===
 Contributors: wpsoul
-Tags: gutenberg, spline3d, 3d, webxr
+Tags: gutenberg, AI
 Author: GreenshiftWP
 Author URI: https://greenshiftwp.com/
-Requires at least: 5.9
-Tested up to: 6.1
+Requires at least: 6.2
+Tested up to: 6.3
 Requires PHP: 7.0
-Stable tag: 0.6
+Stable tag: 0.1
 
-Use Spline 3d inside Gutenberg
+Use AI inside Gutenberg
