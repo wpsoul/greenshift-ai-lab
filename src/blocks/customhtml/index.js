@@ -3,20 +3,20 @@
  */
 
 // Import Styles
-import './editor.scss';
+import './styles.editor.scss';
 
 // Import wp dependencies
 const { __ } = wp.i18n;
 const { registerBlockType } = wp.blocks;
 
 // Import block dependencies
-import attributes from './components/attributes';
+import attributes from '../customhtml/attributes';
 import edit from './edit.js';
-import blockIcon from './components/icon';
+import blockIcon from '../customhtml/icon';
 
 
 // Register Block
-registerBlockType('greenshift-blocks/spline3d', {
+registerBlockType('greenshift-blocks/customhtml', {
 	title: __('Custom code builder with AI'),
 	description: __('Smart code maker'),
 	icon: blockIcon,

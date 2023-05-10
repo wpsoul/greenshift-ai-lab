@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Greenshift AI Lab
+ * Plugin Name: Greenshift AI Lab 
  * Description: Smart helpers with AI for WordPress
  * Author: Wpsoul
  * Author URI: https://greenshiftwp.com
@@ -112,6 +112,35 @@ if(!function_exists('greenShiftAi_editor_assets')){
 		);
 
 	}
+}
+
+if(!function_exists('gspb_gutenbergAI_is_parent_active')){
+	function gspb_gutenbergAI_is_parent_active()
+	{
+		$active_plugins = get_option('active_plugins', array());
+
+		if (is_multisite()) {
+			$network_active_plugins = get_site_option('active_sitewide_plugins', array());
+			$active_plugins         = array_merge($active_plugins, array_keys($network_active_plugins));
+		}
+
+		foreach ($active_plugins as $basename) {
+			if (
+				0 === strpos($basename, 'greenshift-animation-and-page-builder-blocks/')
+			) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+}
+
+
+if (gspb_gutenbergAI_is_parent_active()) {
+	add_action('enqueue_block_editor_assets', 'greenShiftAi_editor_assets');
+} else {
+	add_action('admin_notices', 'greenshift_ai_admin_notice_warning');
 }
 
 //////////////////////////////////////////////////////////////////

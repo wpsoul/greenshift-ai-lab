@@ -18,22 +18,54 @@ class CustomHtml{
 	}
 
 	public $attributes = array(
-		'id' => array(
+		'htmlcontent' => array(
 			'type'    => 'string',
-			'default' => null,
+			'default' => "",
+		),
+		'csscontent' => array(
+			'type'    => 'string',
+			'default' => "",
+		),
+		'scriptcontent' => array(
+			'type'    => 'string',
+			'default' => "",
 		),
 	);
 
 
 	public function render_block($settings = array(), $inner_content=''){
+
 		extract($settings);
 
-		$blockId = 'gspb-id-'.$id;
-		$blockClassName = 'gspb-customhtml '.$blockId.' '.(!empty($className) ? $className : '').' ';
+		$blockClassName = 'gspb-customhtml '.(!empty($className) ? $className : '').'';
 
-		$out = '<div id="'.$blockId.'" class="'.$blockClassName.'">';
+		$out = '<div class="'.$blockClassName.'">';
+
+		$out .= $htmlcontent;
 
         $out .='</div>';
+
+		if ( ! empty( $csscontent ) ) {
+
+			$cssContent = wp_strip_all_tags( $csscontent );
+
+			wp_register_style( 'customhtml', false );
+			wp_enqueue_style( 'customhtml' );
+			wp_add_inline_style( 'customhtml', $cssContent );
+
+		}
+
+		if ( ! empty( $csscontent ) ) {
+			
+			$scriptcontent = wp_strip_all_tags( $scriptcontent );
+
+			wp_register_script( 'customhtml', '', array(), '', true );
+			wp_enqueue_script( 'customhtml' );
+			wp_add_inline_script( 'customhtml', $scriptcontent );
+			
+		}
+	
+
 		return $out;
 	}
 }

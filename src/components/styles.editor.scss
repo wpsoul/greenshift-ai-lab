@@ -1,0 +1,26 @@
+
+.gspb_code_viewer{
+    position: relative;
+    background-color: rgb(30, 30, 30);
+    padding: 10px 20px;
+    pre{
+        white-space: pre-wrap !important; 
+        margin: 0;
+        font-size: 1rem;
+    }
+    .gspb_code_textarea{
+        position: absolute; 
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0; 
+        background-color: transparent; 
+        color: transparent; 
+        outline: 0; 
+        font-family: monospace;
+        caret-color: white;
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+}
+

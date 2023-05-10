@@ -4,7 +4,16 @@
  */
 const { collectionsObjects } = gspblib.helpers;
 export default {
-	type: {
-		type: 'string',
+	htmlcontent: {
+		type: "string",
+		default: ""
+	},
+	csscontent: {
+		type: "string",
+		default: ""
+	},
+	scriptcontent: {
+		type: "string",
+		default: ""
 	},
 };

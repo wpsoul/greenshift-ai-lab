@@ -11,4 +11,4 @@
 
 // Import sass styles
 
-import './blocks/spline3d';
+import './blocks/customhtml';

@@ -1,6 +1,6 @@
 {
 	"apiVersion": 1,
-	"name": "greenshift-blocks/customcode",
+	"name": "greenshift-blocks/customhtml",
     "title": "Custom code with AI",
 	"category":"greenShiftAi"
 }
