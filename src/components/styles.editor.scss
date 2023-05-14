@@ -1,26 +1,71 @@
-
-.gspb_code_viewer{
-    position: relative;
-    background-color: rgb(30, 30, 30);
-    padding: 10px 20px;
-    pre{
-        white-space: pre-wrap !important; 
-        margin: 0;
-        font-size: 1rem;
+.hljs {
+    background: #15202b;
+    color: white;
+    display: block;
+    padding: 16px;
+    overflow-x: auto;
+    border-radius: 6px;
+    .hljs-variable{
+        color: #43bef9;
     }
-    .gspb_code_textarea{
-        position: absolute; 
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0; 
-        background-color: transparent; 
-        color: transparent; 
-        outline: 0; 
-        font-family: monospace;
-        caret-color: white;
-        padding: 10px 20px;
-        font-size: 1rem;
+    .hljs-name{
+        color: #ff9999;
+    }
+    .hljs-tag{
+        color: #88ccbb;
+    }
+    .hljs-section, .hljs-title {
+        color: #f22c3d;
+    }
+    .hljs-deletion, .hljs-number, .hljs-quote, .hljs-selector-class, .hljs-selector-id, .hljs-string, .hljs-template-tag, .hljs-type {
+        color: #df3079;
+    }
+    .hljs-addition, .hljs-built_in, .hljs-bullet, .hljs-code {
+        color: #e9950c;
+    }
+    .hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-tag,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id{
+        color: #c5ad00;
+    }
+    .hljs-link, .hljs-operator, .hljs-regexp, .hljs-selector-attr, .hljs-selector-pseudo, .hljs-symbol, .hljs-template-variable {
+        color: white;
+    }
+    .hljs-comment,.hljs-params{
+        color: #3fa526
     }
 }
 
+.gspb_syntext_heighlighter{
+    background-color: #15202b;
+    padding: 10px;
+    .gspb_code_viewer{
+        position: relative;
+        pre{
+            white-space: pre-wrap; 
+            margin: 0;
+            font-size: 1rem;
+            line-height: 1.6rem;
+            code{
+                padding: 5px !important;
+            }
+        }
+        .code_input{
+            position: absolute; 
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0; 
+            width: 100%;
+            height: 100%;
+            textarea{
+                background-color: transparent; 
+                color: transparent; 
+                outline: 0; 
+                font-family: monospace;
+                caret-color: white;
+                font-size: 1rem;
+                line-height: 1.6rem;
+                padding: 5px;
+            }
+        }
+    }
+   }

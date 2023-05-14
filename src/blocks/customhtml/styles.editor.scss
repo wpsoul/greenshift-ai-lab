@@ -1,6 +1,6 @@
 
 .gspb_codeinner{
-    transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+    transition: all 0.6s;
 
     // Hide scrollbar for IE, Edge and Firefox //
     -ms-overflow-style: none;  
@@ -11,3 +11,92 @@
         display: none;
     }  
 }
+
+.openai_wrapper{
+    border: 1px solid #ebebeb !important;
+    .openai_form_wrapper{
+        position: relative;
+        padding: 20px 20px 0;
+    }
+    .openai_textfield input{
+        border-top-width: 0;
+        border-left-width: 0;
+        border-right-width: 0;
+        font-size: 1.1rem;
+        line-height: 1.5rem;
+        padding: 10px;
+        &:disabled{
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    }
+    .loader{
+        position: absolute;
+        right: 25px;
+        top: 28px;
+        z-index: 1;
+    }
+    .openai_response_wrapper{
+       margin-top: 30px;
+        .ai_input{
+            line-height: 1.2;
+            margin: 0 0 16px 0;
+            padding: 0 20px;
+        }
+        .ai_response{
+            background-color: #f7f7f8;
+            padding: 16px;
+            p, pre{
+                margin: 0 0 16px;
+                &:last-child{
+                    margin: 0;
+                }
+            }
+            .hljs-code-container{
+                min-height: 24px;
+                background-color: #343541;
+                border-radius: 6px 6px 0 0;
+                text-align: end;
+                padding: 8px 16px;
+                line-height: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                color: #fff;
+                font-size: 0.8rem;
+            }
+            .hljs-code-wrapper{
+                position: relative;
+            }
+            .hljs-copy-button{
+                padding: 0 5px;
+                background: none;
+                color: #fff;
+                border: 0;
+                cursor: pointer;
+                line-height: 1rem;
+                font-size: 0.8rem;
+                transition: all 0.5s;
+                &:hover{
+                    color: rgba(217,217,227);
+                }
+            }
+            code{
+                border-radius: 0 0 6px 6px;
+                font-size: 1.1rem;
+                line-height: 1.5rem;
+                position: relative;
+            }
+        }
+        .gsbp_ai_btn{
+            text-align: center;
+            padding: 0 0 20px;
+            .gsbp_ai_header_btn{
+                &:not(:last-child){
+                    margin-right: 20px;
+                }
+            }
+        }
+    }
+}
+

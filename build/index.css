@@ -1,2 +1,173 @@
-.gspb_codeinner{-ms-overflow-style:none;scrollbar-width:none;transition:max-height .5s cubic-bezier(0,1,0,1)}.gspb_codeinner::-webkit-scrollbar{display:none}
-.gspb_code_viewer{background-color:#1e1e1e;padding:10px 20px;position:relative}.gspb_code_viewer pre{font-size:1rem;margin:0;white-space:pre-wrap!important}.gspb_code_viewer .gspb_code_textarea{background-color:transparent;bottom:0;caret-color:#fff;color:transparent;font-family:monospace;font-size:1rem;left:0;outline:0;padding:10px 20px;position:absolute;right:0;top:0}
+/*!*****************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[3].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[3].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[3].use[3]!./src/blocks/customhtml/styles.editor.scss ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************/
+.gspb_codeinner {
+  transition: all 0.6s;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.gspb_codeinner::-webkit-scrollbar {
+  display: none;
+}
+
+.openai_wrapper {
+  border: 1px solid #ebebeb !important;
+}
+.openai_wrapper .openai_form_wrapper {
+  position: relative;
+  padding: 20px 20px 0;
+}
+.openai_wrapper .openai_textfield input {
+  border-top-width: 0;
+  border-left-width: 0;
+  border-right-width: 0;
+  font-size: 1.1rem;
+  line-height: 1.5rem;
+  padding: 10px;
+}
+.openai_wrapper .openai_textfield input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.openai_wrapper .loader {
+  position: absolute;
+  right: 25px;
+  top: 28px;
+  z-index: 1;
+}
+.openai_wrapper .openai_response_wrapper {
+  margin-top: 30px;
+}
+.openai_wrapper .openai_response_wrapper .ai_input {
+  line-height: 1.2;
+  margin: 0 0 16px 0;
+  padding: 0 20px;
+}
+.openai_wrapper .openai_response_wrapper .ai_response {
+  background-color: #f7f7f8;
+  padding: 16px;
+}
+.openai_wrapper .openai_response_wrapper .ai_response p, .openai_wrapper .openai_response_wrapper .ai_response pre {
+  margin: 0 0 16px;
+}
+.openai_wrapper .openai_response_wrapper .ai_response p:last-child, .openai_wrapper .openai_response_wrapper .ai_response pre:last-child {
+  margin: 0;
+}
+.openai_wrapper .openai_response_wrapper .ai_response .hljs-code-container {
+  min-height: 24px;
+  background-color: #343541;
+  border-radius: 6px 6px 0 0;
+  text-align: end;
+  padding: 8px 16px;
+  line-height: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+  font-size: 0.8rem;
+}
+.openai_wrapper .openai_response_wrapper .ai_response .hljs-code-wrapper {
+  position: relative;
+}
+.openai_wrapper .openai_response_wrapper .ai_response .hljs-copy-button {
+  padding: 0 5px;
+  background: none;
+  color: #fff;
+  border: 0;
+  cursor: pointer;
+  line-height: 1rem;
+  font-size: 0.8rem;
+  transition: all 0.5s;
+}
+.openai_wrapper .openai_response_wrapper .ai_response .hljs-copy-button:hover {
+  color: rgb(217, 217, 227);
+}
+.openai_wrapper .openai_response_wrapper .ai_response code {
+  border-radius: 0 0 6px 6px;
+  font-size: 1.1rem;
+  line-height: 1.5rem;
+  position: relative;
+}
+.openai_wrapper .openai_response_wrapper .gsbp_ai_btn {
+  text-align: center;
+  padding: 0 0 20px;
+}
+.openai_wrapper .openai_response_wrapper .gsbp_ai_btn .gsbp_ai_header_btn:not(:last-child) {
+  margin-right: 20px;
+}
+/*!**********************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[3].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[3].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[3].use[3]!./src/components/styles.editor.scss ***!
+  \**********************************************************************************************************************************************************************************************************************************************************/
+.hljs {
+  background: #15202b;
+  color: white;
+  display: block;
+  padding: 16px;
+  overflow-x: auto;
+  border-radius: 6px;
+}
+.hljs .hljs-variable {
+  color: #43bef9;
+}
+.hljs .hljs-name {
+  color: #ff9999;
+}
+.hljs .hljs-tag {
+  color: #88ccbb;
+}
+.hljs .hljs-section, .hljs .hljs-title {
+  color: #f22c3d;
+}
+.hljs .hljs-deletion, .hljs .hljs-number, .hljs .hljs-quote, .hljs .hljs-selector-class, .hljs .hljs-selector-id, .hljs .hljs-string, .hljs .hljs-template-tag, .hljs .hljs-type {
+  color: #df3079;
+}
+.hljs .hljs-addition, .hljs .hljs-built_in, .hljs .hljs-bullet, .hljs .hljs-code {
+  color: #e9950c;
+}
+.hljs .hljs-attr, .hljs .hljs-attribute, .hljs .hljs-literal, .hljs .hljs-meta, .hljs .hljs-number, .hljs .hljs-operator, .hljs .hljs-selector-tag, .hljs .hljs-selector-attr, .hljs .hljs-selector-class, .hljs .hljs-selector-id {
+  color: #c5ad00;
+}
+.hljs .hljs-link, .hljs .hljs-operator, .hljs .hljs-regexp, .hljs .hljs-selector-attr, .hljs .hljs-selector-pseudo, .hljs .hljs-symbol, .hljs .hljs-template-variable {
+  color: white;
+}
+.hljs .hljs-comment, .hljs .hljs-params {
+  color: #3fa526;
+}
+
+.gspb_syntext_heighlighter {
+  background-color: #15202b;
+  padding: 10px;
+}
+.gspb_syntext_heighlighter .gspb_code_viewer {
+  position: relative;
+}
+.gspb_syntext_heighlighter .gspb_code_viewer pre {
+  white-space: pre-wrap;
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6rem;
+}
+.gspb_syntext_heighlighter .gspb_code_viewer pre code {
+  padding: 5px !important;
+}
+.gspb_syntext_heighlighter .gspb_code_viewer .code_input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.gspb_syntext_heighlighter .gspb_code_viewer .code_input textarea {
+  background-color: transparent;
+  color: transparent;
+  outline: 0;
+  font-family: monospace;
+  caret-color: white;
+  font-size: 1rem;
+  line-height: 1.6rem;
+  padding: 5px;
+}
+
+/*# sourceMappingURL=index.css.map*/

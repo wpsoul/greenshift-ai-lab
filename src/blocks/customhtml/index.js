@@ -10,9 +10,9 @@ const { __ } = wp.i18n;
 const { registerBlockType } = wp.blocks;
 
 // Import block dependencies
-import attributes from './attributes';
+import attributes from '../customhtml/attributes';
 import edit from './edit.js';
-import blockIcon from './icon';
+import blockIcon from '../customhtml/icon';
 
 
 // Register Block

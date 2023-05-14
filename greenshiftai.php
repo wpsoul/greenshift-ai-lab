@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Greenshift AI Lab 
+ * Plugin Name: Greenshift AI Lab
  * Description: Smart helpers with AI for WordPress
  * Author: Wpsoul
  * Author URI: https://greenshiftwp.com
@@ -152,4 +152,81 @@ function greenshift_ai_admin_notice_warning() {
 		<p><?php printf( __( 'Please, activate %s plugin to extend Greenshift AI Lab' ), '<a href="https://wordpress.org/plugins/greenshift-animation-and-page-builder-blocks" target="_blank">Greenshift</a>' ) ; ?></p>
 	</div>
 	<?php
+}
+
+
+add_action('rest_api_init', 'gspb_ai_lab_register_route');
+
+function gspb_ai_lab_register_route()
+{
+
+	register_rest_route(
+		'greenshift/v1',
+		'/gspb_open_ai/',
+		array(
+			array(
+				'methods'             => 'POST',
+				'callback'            => 'gspb_get_openai_data',
+				'permission_callback' => function () {
+					return current_user_can('edit_posts');
+				},
+				'args'                => array(),
+			),
+		)
+	);
+
+}
+
+function gspb_get_openai_data($request)
+{
+
+	try {
+		$userinput = sanitize_text_field($request->get_param('userinput'));
+		$apikey = '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';
+		$openapiendpoint = 'https://api.openai.com/v1/chat/completions';
+
+		$payload = array(
+			'model' => "gpt-3.5-turbo",
+			"temperature" => 0.7,
+			'messages' => array(
+				array(
+					"role" => "user",
+					"content" => "Please reply below question in markdown format.\n '.$userinput.'"
+				)
+			)
+		);
+		
+		if ($userinput) {
+			$curl = curl_init();
+
+				curl_setopt_array($curl, array(
+					CURLOPT_URL => $openapiendpoint,
+					CURLOPT_RETURNTRANSFER => true,
+					CURLOPT_ENCODING => '',
+					CURLOPT_MAXREDIRS => 10,
+					CURLOPT_TIMEOUT => 0,
+					CURLOPT_FOLLOWLOCATION => true,
+					CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+					CURLOPT_CUSTOMREQUEST => 'POST',
+					CURLOPT_POSTFIELDS => json_encode($payload),
+					CURLOPT_HTTPHEADER => array(
+						'Content-Type: application/json',
+						'Authorization: Bearer '.$apikey.''
+					),
+				));
+
+				$response = curl_exec($curl);
+
+				return json_encode(array(
+					'success' => true,
+					'response' => $response ,
+				));
+		}
+		
+	} catch (Exception $e) {
+		return json_encode(array(
+			'success' => false,
+			'message' => $e->getMessage(),
+		));
+	}
 }
