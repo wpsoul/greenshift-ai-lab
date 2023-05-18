@@ -90,10 +90,7 @@
 }
 .openai_wrapper .openai_response_wrapper .gsbp_ai_btn {
   text-align: center;
-  padding: 0 0 20px;
-}
-.openai_wrapper .openai_response_wrapper .gsbp_ai_btn .gsbp_ai_header_btn:not(:last-child) {
-  margin-right: 20px;
+  margin-bottom: 20px;
 }
 /*!**********************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[3].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[3].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[3].use[3]!./src/components/styles.editor.scss ***!

@@ -5,15 +5,13 @@ class CopyButtonPlugin {
       self.lang = "en";
     }
     "after:highlightElement"({ el, result, text }) {
-      // Create the copy button and append it to the codeblock.
-  
-      el.dataset.language = result.language;
+      // Create the copy button and append it to the codeblock...
+      
+      const language = result?.language ? result.language.toLowerCase() : '';
 
-      if(el?.dataset?.copy !== "true" ){ return; }
+      if( language === '' ||  el?.dataset?.copy !== "true" || el.parentElement.getElementsByClassName("hljs-code-container").length ){ return; }
 
-      if( el.parentElement.getElementsByClassName("hljs-code-container").length){ return; }
-
-    //  const btnparentElement = document.createElement("div");
+      el.dataset.language = language;
 
       const wrapperEle = document.createElement("div");
       wrapperEle.classList.add("hljs-code-container");
@@ -21,12 +19,10 @@ class CopyButtonPlugin {
 
       const langEle = document.createElement("span");
       langEle.classList.add("hljs-language-ele");
-      langEle.textContent = result.language;
+      langEle.textContent = language;
       wrapperEle.appendChild(langEle);
 
-      
-
-      if( result.language === "javascript" || result.language === "html" || result.language === "css" ) {
+      if( language === "javascript" || language === "html" || language === "css" ) {
         let button = Object.assign(document.createElement("button"), {
           innerHTML: "<i class='rhicon rhi-clone'></i> Copy to code area",
           className: "hljs-copy-button",
@@ -50,7 +46,6 @@ class CopyButtonPlugin {
           
           // copy to clipboard function temporarily disabled if required will use this.
           // if (!navigator.clipboard) { return; }
-        
     
           // navigator.clipboard.writeText(newText).then(function () {
           //     button.innerHTML = "Copied to Clipboard!";
@@ -63,7 +58,6 @@ class CopyButtonPlugin {
           // })
         };
       }
-     
     }
   }
   

@@ -1,7 +1,14 @@
+/**
+ * Wordpress dependencies
+*/
 import { __ } from '@wordpress/i18n';
 import { useState, useRef, useEffect } from '@wordpress/element';
 import { BlockControls } from '@wordpress/block-editor';
 import { ToolbarButton, Spinner, TextControl, ToolbarGroup } from '@wordpress/components';
+
+/**
+ * Internal dependencies
+*/
 import Preview from './preview';
 import Gspbcode from '../../components/gspbcode';
 import OpenAIResponse from './responselist';
@@ -13,6 +20,7 @@ function edit(props) {
 
 	const [ isLoading, setIsLoading ] = useState( false );
 	const [ userInput, setUserInput ] = useState('');
+	const [ conversation, setConversation ] = useState([]);
 	
 	const targetCoderef = useRef( null );
 	const isFirstLoadRef = useRef( true );
@@ -49,16 +57,27 @@ function edit(props) {
 	}
 
 	// call api on form submit, disable input till response is received.
+
 	function onSubmitHandler(e){
 		e.preventDefault();
+		if( userInput === ''){ return ; }
 		setIsLoading(true);
+	
+		const modifiedInput = `Please reply below question in markdown format.\n ${userInput}`;
+		const inputPayload  = {
+			role: 'user',
+			content: modifiedInput
+		};
+		const apiPayload = [ ...conversation, inputPayload ];
+
 		wp.apiFetch({
-			path: `/greenshift/v1/gspb_open_ai?userinput=${userInput}`,
-			method: 'POST'
+			path: `/greenshift/v1/gspb_open_ai`,
+			method: 'POST',
+			data: { "messages" : apiPayload }
 		}).then(response => {
 			const data = JSON.parse(response);
 			if(data?.response){
-				const responseData = JSON.parse(data.response);
+				const responseData = JSON.parse( data.response );
 				const responseString = responseData?.choices[0]?.message?.content;
 
 				if( responseString !== '' ){
@@ -66,24 +85,22 @@ function edit(props) {
 						userInput: userInput,
 						aiResponse : responseString
 					}
+					setConversation([ ...conversation, { role: 'assistant', content: responseString }]);
 					const newResponseData = [ newResponse, ...openairesponse ];
 					setAttributes( { openairesponse : newResponseData } );
 				}
-			}			
+			}
 			setUserInput('');
 			setIsLoading(false);
 		}).catch(error => {
 			setIsLoading(false);
 		});
-	}
+	};
 
 	// collapse Effect
 	useEffect(() => {
-
 		const targetEle = targetCoderef?.current;
-
 		if ( targetEle === undefined ) return;
-
 
 		if( collapseMode ){
 			targetEle.style.maxHeight = targetEle.scrollHeight + 'px';
@@ -105,7 +122,6 @@ function edit(props) {
 				isFirstLoadRef.current = false;
 			}
 		}
-
 	}, [ collapseMode ])
 
 
@@ -195,13 +211,13 @@ function edit(props) {
 								}
 							</div>
 							<div className='openai_response_wrapper'>
-								<OpenAIResponse isLoading={ isLoading } { ...props } />
+								<OpenAIResponse isLoading={ isLoading } { ...props } setConversation ={ setConversation } />
 							</div>
 						</div>
 					}
 				</div>
 			</div>
-	);
+		);
 }
 
 export default edit;

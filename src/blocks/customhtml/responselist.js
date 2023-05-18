@@ -1,12 +1,19 @@
+/**
+ * External dependencies
+*/
 import { useEffect, useRef, useState } from '@wordpress/element';
 import { Button } from '@wordpress/components';
 import ReactMarkdown from 'react-markdown';
 import hljs from 'highlight.js';
+
+/**
+ * Internal dependencies
+*/
 import CopyButtonPlugin from './copytoclipboard';
 
 export default function OpenAIResponse ( props ) {
 
-    const { attributes, setAttributes, isLoading } = props;
+    const { attributes, setAttributes, isLoading, setConversation } = props;
     const { openairesponse, htmlcontent, csscontent, scriptcontent } = attributes;
 
     const [pluginLoaded, setPluginLoaded ] = useState(false);
@@ -40,22 +47,22 @@ export default function OpenAIResponse ( props ) {
                 const language = el?.dataset?.language;
                 switch ( language ) {
                     case "html":
-                        setAttributes({htmlcontent: htmlcontent + text }) 
+                        setAttributes({ htmlcontent: htmlcontent + text }) 
                         button.innerHTML = "Copied to html code area!";
                         updateButtonText( button );
                         break;
                     case "css":
-                        setAttributes({csscontent: csscontent + text })
+                        setAttributes({ csscontent: csscontent + text })
                         button.innerHTML = "Copied to css code area!";
                         updateButtonText( button );
                         break;
                     case "javascript":
-                        setAttributes({scriptcontent: scriptcontent + text }) 
+                        setAttributes({ scriptcontent: scriptcontent + text }) 
                         button.innerHTML = "Copied to script code area!";
                         updateButtonText( button );
                         break;
                     case "js":
-                        setAttributes({scriptcontent: scriptcontent + text }) 
+                        setAttributes({ scriptcontent: scriptcontent + text }) 
                         button.innerHTML = "Copied to script code area!";
                         updateButtonText( button );
                         break;
@@ -64,18 +71,14 @@ export default function OpenAIResponse ( props ) {
                 }},
                 })
             );
-
             setPluginLoaded(true);
-
             }
         }
     });
 
-  
-    
     return(
         <>
-          <div ref={markdDownWrapper}>
+          <div ref={ markdDownWrapper }>
           { openairesponse?.map((item, id) => {
               return (
                   <div key={ id } style={{ 'margin-bottom': '20px' }} >
@@ -97,40 +100,13 @@ export default function OpenAIResponse ( props ) {
             
          </div>
         { openairesponse.length > 0 && 
-            <div className='gsbp_ai_btn'>
+            <div className='gsbp_ai_btn' >
                 <Button
                     variant='primary'
-                    className='gsbp_ai_header_btn'
                     disabled={ isLoading }
-                    onClick={() => setAttributes({ openairesponse: [] })}
+                    onClick={() => {setAttributes({ openairesponse: [] }); setConversation([]); }}
                 >
                     New Chat
-                </Button>
-
-                <Button
-                    variant='primary'
-                    className='gsbp_ai_header_btn'
-                    disabled={ isLoading }
-                    // onClick={}
-                >
-                Show description
-                </Button>
-
-                <Button
-                    variant='primary'
-                    className='gsbp_ai_header_btn'
-                    disabled={ isLoading }
-                    // onClick={}
-                >
-                    Hide description
-                </Button>
-                <Button
-                    variant='primary'
-                    className='gsbp_ai_header_btn'
-                    disabled={ isLoading }
-                    onClick={() => setAttributes({ openairesponse: [] })}
-                >
-                    Remove description
                 </Button>
             </div>
         }

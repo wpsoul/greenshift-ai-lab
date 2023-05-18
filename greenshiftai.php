@@ -155,6 +155,7 @@ function greenshift_ai_admin_notice_warning() {
 }
 
 
+
 add_action('rest_api_init', 'gspb_ai_lab_register_route');
 
 function gspb_ai_lab_register_route()
@@ -181,22 +182,19 @@ function gspb_get_openai_data($request)
 {
 
 	try {
-		$userinput = sanitize_text_field($request->get_param('userinput'));
 		$apikey = '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';
 		$openapiendpoint = 'https://api.openai.com/v1/chat/completions';
+
+		$data = $request->get_json_params();
+		$messages = isset( $data[ 'messages' ]) ? $data[ 'messages' ] : '';
 
 		$payload = array(
 			'model' => "gpt-3.5-turbo",
 			"temperature" => 0.7,
-			'messages' => array(
-				array(
-					"role" => "user",
-					"content" => "Please reply below question in markdown format.\n '.$userinput.'"
-				)
-			)
+			'messages' => $messages
 		);
 		
-		if ($userinput) {
+		if ($messages) {
 			$curl = curl_init();
 
 				curl_setopt_array($curl, array(

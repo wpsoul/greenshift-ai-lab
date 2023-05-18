@@ -1,8 +1,14 @@
-
+/**
+ * External dependencies
+*/
 import { PlainText } from '@wordpress/block-editor';
 import { __ } from '@wordpress/i18n';
 import { useRef, useEffect, useState } from '@wordpress/element';
 import hljs from 'highlight.js';
+
+/**
+ * Internal dependencies
+*/
 import './styles.editor.scss';
 
 export default function Gspbcode( props ) {
@@ -15,7 +21,7 @@ export default function Gspbcode( props ) {
 
     const codeHanler = ( content ) => {
         onchange( content );
-    }
+    };
 
     useEffect(() => {
         const currentRef = markdDownWrapper?.current;
@@ -23,12 +29,9 @@ export default function Gspbcode( props ) {
             const { ownerDocument } = currentRef;
     
             ownerDocument.querySelectorAll('pre').forEach(el => {
-
                 const codeEle = el.getElementsByTagName('code')[0];
                     hljs.highlightElement(codeEle);  
-            });
-
-           
+            });           
         }
     });
 
@@ -46,7 +49,7 @@ export default function Gspbcode( props ) {
                 onKeyDown={() => textAreaRef.current?.focus()}
                 onClick={() => textAreaRef.current?.focus()}
                 ref={ markdDownWrapper }
-                >
+            >
                 <div style={{ height: height }}>
                     <pre>
                         <code className={`language-${langauge ? langauge : ''}`}>
