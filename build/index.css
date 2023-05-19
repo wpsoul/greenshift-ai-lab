@@ -9,6 +9,14 @@
 .gspb_codeinner::-webkit-scrollbar {
   display: none;
 }
+.gspb_codeinner .collapse_code_wrapper {
+  background-color: #15202b;
+  padding: 10px;
+  color: white;
+  font-family: monospace;
+  font-size: 1rem;
+  line-height: 1.6rem;
+}
 
 .openai_wrapper {
   border: 1px solid #ebebeb !important;

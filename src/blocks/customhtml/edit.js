@@ -44,20 +44,24 @@ function edit(props) {
 
 	let codeContent = htmlcontent;
 	let langauge = 'html';
+	let langaugeTag = 'html';
 
 	if( codeMode === 'html' ){
 		codeContent = htmlcontent;
 		langauge = 'html';
+		langaugeTag = 'html';
 	} else if( codeMode === 'css' ){
 		codeContent =  csscontent;
 		langauge = 'css';
+		langaugeTag = 'style';
 	} else if( codeMode === 'script'){
 		codeContent = scriptcontent;
 		langauge = 'javascript';
+		langaugeTag = 'script';
 	}
 
-	// call api on form submit, disable input till response is received.
 
+	// call api on form submit, disable input till response is received.
 	function onSubmitHandler(e){
 		e.preventDefault();
 		if( userInput === ''){ return ; }
@@ -102,28 +106,45 @@ function edit(props) {
 		const targetEle = targetCoderef?.current;
 		if ( targetEle === undefined ) return;
 
+		const handleTransition = ( e ) => {
+			const targetElement = e.target;
+			const threshold = 5; // Define your desired threshold
+			// Calculate the absolute difference between scrollHeight and clientHeight
+			const difference = Math.abs(targetElement.scrollHeight - targetElement.clientHeight);
+			if (difference <= threshold) {
+				if ( ! collapseMode ){
+					targetElement.style.maxHeight = '';
+					targetElement.style.overflow = '';
+				}
+			}
+		}
+
 		if( collapseMode ){
-			targetEle.style.maxHeight = targetEle.scrollHeight + 'px';
+			targetEle.style.maxHeight = '132px';
 			targetEle.style.overflow = 'auto';
-			setTimeout(() => {
-				targetEle.style.maxHeight = '55px';
-			}, 100 );
 		} else {
 			targetEle.style.maxHeight = targetEle.scrollHeight + 'px';
-			targetEle.addEventListener('transitionend', function() {
-				if (targetEle.scrollHeight === targetEle.clientHeight) {
-					targetEle.style.maxHeight = '';
-					targetEle.style.overflow = '';
-				}
-			});
+
 			if ( isFirstLoadRef.current ) {
+				targetEle.addEventListener("transitionend", handleTransition, { passive: true });
 				targetEle.style.maxHeight = '';
 				targetEle.style.overflow = '';
 				isFirstLoadRef.current = false;
 			}
 		}
-	}, [ collapseMode ])
+	}, [ collapseMode ]);
 
+	const IsCollapseCodeMode = () => {
+		return(
+			<>
+				<div className='collapse_code_wrapper'>
+					<div className='code_laungauge'>&lt;{langaugeTag}&gt;</div>
+						{codeContent.substring(0, 60) + '...'}
+					<div className='code_laungauge'>&lt;/{langaugeTag}&gt;</div>
+				</div>
+			</>
+		)
+	};
 
 	return (
 			<div className={ blockClassName } >
@@ -185,12 +206,16 @@ function edit(props) {
 							isSelected = { isSelected }
 						/>
 					 }
-					{ ( codeMode === 'css' || codeMode === 'script' || codeMode === 'html' ) && 
-						<Gspbcode 
-							code = { codeContent } // code content
-							langauge = { langauge } // language
-							onchange = { codeValueHandler }  // setter function
-						/>
+					{ ( codeMode === 'css' || codeMode === 'script' || codeMode === 'html' ) &&
+						( !collapseMode ?
+							<Gspbcode 
+								code = { codeContent } // code content
+								langauge = { langauge } // language
+								onchange = { codeValueHandler }  // setter function
+							/>
+							:
+							<IsCollapseCodeMode />
+						)
 					}
 					{ codeMode === 'ai' &&
 						<div className='openai_wrapper'>

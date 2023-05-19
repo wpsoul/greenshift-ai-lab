@@ -206,19 +206,22 @@ function edit(props) {
   };
   let codeContent = htmlcontent;
   let langauge = 'html';
+  let langaugeTag = 'html';
   if (codeMode === 'html') {
     codeContent = htmlcontent;
     langauge = 'html';
+    langaugeTag = 'html';
   } else if (codeMode === 'css') {
     codeContent = csscontent;
     langauge = 'css';
+    langaugeTag = 'style';
   } else if (codeMode === 'script') {
     codeContent = scriptcontent;
     langauge = 'javascript';
+    langaugeTag = 'script';
   }
 
   // call api on form submit, disable input till response is received.
-
   function onSubmitHandler(e) {
     e.preventDefault();
     if (userInput === '') {
@@ -269,27 +272,42 @@ function edit(props) {
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const targetEle = targetCoderef?.current;
     if (targetEle === undefined) return;
+    const handleTransition = e => {
+      const targetElement = e.target;
+      const threshold = 5; // Define your desired threshold
+      // Calculate the absolute difference between scrollHeight and clientHeight
+      const difference = Math.abs(targetElement.scrollHeight - targetElement.clientHeight);
+      if (difference <= threshold) {
+        if (!collapseMode) {
+          targetElement.style.maxHeight = '';
+          targetElement.style.overflow = '';
+        }
+      }
+    };
     if (collapseMode) {
-      targetEle.style.maxHeight = targetEle.scrollHeight + 'px';
+      targetEle.style.maxHeight = '132px';
       targetEle.style.overflow = 'auto';
-      setTimeout(() => {
-        targetEle.style.maxHeight = '55px';
-      }, 100);
     } else {
       targetEle.style.maxHeight = targetEle.scrollHeight + 'px';
-      targetEle.addEventListener('transitionend', function () {
-        if (targetEle.scrollHeight === targetEle.clientHeight) {
-          targetEle.style.maxHeight = '';
-          targetEle.style.overflow = '';
-        }
-      });
       if (isFirstLoadRef.current) {
+        targetEle.addEventListener("transitionend", handleTransition, {
+          passive: true
+        });
         targetEle.style.maxHeight = '';
         targetEle.style.overflow = '';
         isFirstLoadRef.current = false;
       }
     }
   }, [collapseMode]);
+  const IsCollapseCodeMode = () => {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
+      className: "collapse_code_wrapper"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
+      className: "code_laungauge"
+    }, "<", langaugeTag, ">"), codeContent.substring(0, 60) + '...', (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
+      className: "code_laungauge"
+    }, "</", langaugeTag, ">")));
+  };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
     className: blockClassName
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.BlockControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ToolbarGroup, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ToolbarButton, {
@@ -330,13 +348,13 @@ function edit(props) {
     blockStyle: [csscontent],
     blockScript: scriptcontent,
     isSelected: isSelected
-  }), (codeMode === 'css' || codeMode === 'script' || codeMode === 'html') && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_components_gspbcode__WEBPACK_IMPORTED_MODULE_6__["default"], {
+  }), (codeMode === 'css' || codeMode === 'script' || codeMode === 'html') && (!collapseMode ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_components_gspbcode__WEBPACK_IMPORTED_MODULE_6__["default"], {
     code: codeContent // code content
     ,
     langauge: langauge // language
     ,
     onchange: codeValueHandler // setter function
-  }), codeMode === 'ai' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
+  }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(IsCollapseCodeMode, null)), codeMode === 'ai' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
     className: "openai_wrapper"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
     className: "openai_form_wrapper"

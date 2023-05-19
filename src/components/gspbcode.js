@@ -53,7 +53,7 @@ export default function Gspbcode( props ) {
                 <div style={{ height: height }}>
                     <pre>
                         <code className={`language-${langauge ? langauge : ''}`}>
-                            {code}
+                            {code}  
                         </code>
                     </pre>
                 </div>
@@ -68,6 +68,7 @@ export default function Gspbcode( props ) {
                     />
                 </div>
             </div>
+           
         </div>
     )
 }
