@@ -4,7 +4,7 @@
 import { __ } from '@wordpress/i18n';
 import { useState, useRef, useEffect } from '@wordpress/element';
 import { BlockControls } from '@wordpress/block-editor';
-import { ToolbarButton, Spinner, TextControl, ToolbarGroup } from '@wordpress/components';
+import { ToolbarButton, Spinner, TextareaControl, ToolbarGroup } from '@wordpress/components';
 
 /**
  * Internal dependencies
@@ -151,21 +151,21 @@ function edit(props) {
 				<BlockControls>
 					<ToolbarGroup>
 						<ToolbarButton
-							className="components-tab-button"
+							className={`components-tab-button ${htmlcontent ? 'gspb_codecontent_changed' : ''}`}
 							isPressed={ codeMode === 'html' ? true : false }
 							onClick={ () => onchangeCodemode( 'html' ) }
 						>
 							HTML
 						</ToolbarButton>
 						<ToolbarButton
-							className="components-tab-button"
+							className={`components-tab-button ${csscontent ? 'gspb_codecontent_changed' : ''}`}
 							isPressed={ codeMode === 'css' ? true : false }
 							onClick={ () => onchangeCodemode( 'css' ) }
 						>
 							CSS
 						</ToolbarButton>
 						<ToolbarButton
-							className="components-tab-button"
+							className={`components-tab-button ${scriptcontent ? 'gspb_codecontent_changed' : ''}`}
 							isPressed={ codeMode === 'script' ? true : false }
 							onClick={ () => onchangeCodemode( 'script' ) }
 						>
@@ -221,7 +221,7 @@ function edit(props) {
 						<div className='openai_wrapper'>
 							<div className='openai_form_wrapper'>
 								<form method="post" onSubmit={ onSubmitHandler } >
-									<TextControl
+									<TextareaControl
 										className='openai_textfield'
 										placeholder='Enter something & hit enter...'
 										value={ userInput }
