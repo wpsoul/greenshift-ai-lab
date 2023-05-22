@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Greenshift AI Lab
+ * Plugin Name: Greenshift AI Lab 
  * Description: Smart helpers with AI for WordPress
  * Author: Wpsoul
  * Author URI: https://greenshiftwp.com
@@ -62,7 +62,6 @@ if(!function_exists('greenShiftAi_register_init')){
 	}
 }
 
-
 add_filter('render_block', 'greenShiftAi_block_script_assets', 10, 2);
 if(!function_exists('greenShiftAi_block_script_assets')){
 	function greenShiftAi_block_script_assets($html, $block)
@@ -92,7 +91,7 @@ if(!function_exists('greenShiftAi_editor_assets')){
 	
 		$index_asset_file = include(GREENSHIFTAI_DIR_PATH . 'build/index.asset.php');
 	
-	
+		
 		// Blocks Assets Scripts
 		wp_enqueue_script(
 			'greenShiftAi-block-js', // Handle.
@@ -102,7 +101,6 @@ if(!function_exists('greenShiftAi_editor_assets')){
 			true
 		);
 		
-	
 		// Styles.
 		wp_enqueue_style(
 			'greenShiftAi-block-css', // Handle.
@@ -113,6 +111,8 @@ if(!function_exists('greenShiftAi_editor_assets')){
 
 	}
 }
+
+add_action('enqueue_block_editor_assets', 'greenShiftAi_editor_assets');
 
 if(!function_exists('gspb_gutenbergAI_is_parent_active')){
 	function gspb_gutenbergAI_is_parent_active()
@@ -136,12 +136,69 @@ if(!function_exists('gspb_gutenbergAI_is_parent_active')){
 	}
 }
 
+function greenshift_lab_ai_settings_callback(){
 
-if (gspb_gutenbergAI_is_parent_active()) {
-	add_action('enqueue_block_editor_assets', 'greenShiftAi_editor_assets');
-} else {
-	add_action('admin_notices', 'greenshift_ai_admin_notice_warning');
+	if (isset($_POST['gspb_save_settings'])) { // Delay script saving
+		if (!wp_verify_nonce($_POST['gspb_settings_field'], 'gspb_settings_page_action')) {
+			esc_html_e("Sorry, your nonce did not verify.", 'greenshift-animation-and-page-builder-blocks');
+			return;
+		}
+		
+		if (isset($_POST['gspb_ailab_openaiapikey'])) {
+			$gspb_ailab_openaiapikey = sanitize_text_field($_POST['gspb_ailab_openaiapikey']);
+			update_option('gspb_ailab_openaiapikey', $gspb_ailab_openaiapikey);
+		}
+	}
+
+	$gspb_ailab_openaiapikey = get_option('gspb_ailab_openaiapikey');
+	$gspb_ailab_openaiapikey = !empty($gspb_ailab_openaiapikey) ? $gspb_ailab_openaiapikey : '';
+	?>
+	<style>
+		.gspb_ai_lab_settings_form{
+			max-width: 1024px;
+		}
+	</style>
+	<div class="gspb_ai_lab_settings_form">
+		<form method="POST">
+			<h2><?php esc_html_e("Greenshift AI Lab", 'greenshift-animation-and-page-builder-blocks'); ?></h2>
+			<div class="greenshift_form">
+				<?php wp_nonce_field('gspb_settings_page_action', 'gspb_settings_field'); ?>
+				<table class="form-table">
+					<tr class="openaiapikey">
+						<th>
+							<label for="openaiapi"><?php esc_html_e("Open AI API Key", 'greenshift-animation-and-page-builder-blocks'); ?></label>
+						</th>
+						<td>
+							<textarea style="width:100%; min-height:50px;border-color:#ddd" id="gspb_ailab_openaiapikey" name="gspb_ailab_openaiapikey"><?php echo esc_html($gspb_ailab_openaiapikey); ?></textarea>
+							<div style="margin-bottom:15px"><a target="_blank" href="https://platform.openai.com/account/api-keys"><?php esc_html_e("Get an API Key", 'greenshift-animation-and-page-builder-blocks'); ?></a></div>
+						</td>
+					</tr>
+				</table>
+
+				<input type="submit" name="gspb_save_settings" value="<?php esc_html_e("Save settings"); ?>" class="button button-primary button-large">
+			</div>
+		</form>
+	</div> <?php
 }
+
+if(!function_exists('greenshift_ai_settings')){
+	function greenshift_ai_settings(){
+		add_submenu_page(
+			'options-general.php',
+			__( 'Greenshift Lab AI', 'greenshift-animation-and-page-builder-blocks' ),
+		   __( 'Greenshift Lab AI','greenshift-animation-and-page-builder-blocks' ),
+		   'manage_options',
+		   'greenshift-lab-ai',
+		   'greenshift_lab_ai_settings_callback',
+		   null
+	   );
+	}
+}
+
+
+if ( ! gspb_gutenbergAI_is_parent_active()) {
+	add_action('admin_menu', 'greenshift_ai_settings');
+} 
 
 //////////////////////////////////////////////////////////////////
 // Show if parent is not loaded
@@ -153,7 +210,6 @@ function greenshift_ai_admin_notice_warning() {
 	</div>
 	<?php
 }
-
 
 
 add_action('rest_api_init', 'gspb_ai_lab_register_route');
@@ -180,9 +236,23 @@ function gspb_ai_lab_register_route()
 
 function gspb_get_openai_data($request)
 {
+	$openaiapikey = '';
+	if (gspb_gutenbergAI_is_parent_active()) {
+		$sitesettings = get_option('gspb_global_settings');
+		$openaiapikey = (!empty($sitesettings['openaiapi'])) ? esc_attr($sitesettings['openaiapi']) : '';
+	} else {
+		$openaiapikey = get_option('gspb_ailab_openaiapikey');
+	}
+
+	if(empty( $openaiapikey )){
+		return json_encode(array(
+			'success' => false,
+			'message' => 'You must need to add API key in plugin settings.' ,
+		));
+	}
 
 	try {
-		$apikey = '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';
+
 		$openapiendpoint = 'https://api.openai.com/v1/chat/completions';
 
 		$data = $request->get_json_params();
@@ -209,7 +279,7 @@ function gspb_get_openai_data($request)
 					CURLOPT_POSTFIELDS => json_encode($payload),
 					CURLOPT_HTTPHEADER => array(
 						'Content-Type: application/json',
-						'Authorization: Bearer '.$apikey.''
+						'Authorization: Bearer '.$openaiapikey.''
 					),
 				));
 

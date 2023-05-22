@@ -76,40 +76,49 @@ export default function OpenAIResponse ( props ) {
         }
     });
 
+    useEffect(() => {
+		if (markdDownWrapper?.current) {
+            // get last child awalys.
+             const lastResponseDiv = markdDownWrapper.current?.lastChild;
+             if(lastResponseDiv){
+                markdDownWrapper.current.scrollTop = lastResponseDiv.offsetTop - 40;
+             }
+		}
+	}, [ openairesponse ]);
+
     return(
         <>
-          <div ref={ markdDownWrapper }>
-          { openairesponse?.map((item, id) => {
-              return (
-                  <div key={ id } style={{ 'margin-bottom': '20px' }} >
-                      <p className='ai_input'>{ item?.userInput }</p>
-                      <ReactMarkdown className='ai_response' children={item?.aiResponse ?? ''}
-                          components={{
-                              code({ className, children }) {
-                                return ( 
-                                    <code data-copy="true" className={`gspb_code_ai ${className ? className : ''}`}>
-                                        { children }
-                                    </code>
-                                )
-                              }
-                          }}
-                      />
-                  </div>
-              )})
-          }
-            
-         </div>
-        { openairesponse.length > 0 && 
-            <div className='gsbp_ai_btn' >
-                <Button
-                    variant='primary'
-                    disabled={ isLoading }
-                    onClick={() => {setAttributes({ openairesponse: [] }); setConversation([]); }}
-                >
-                    New Chat
-                </Button>
+            <div className="chat-container" ref={ markdDownWrapper }>
+                { openairesponse?.map((item, id) => {
+                    return (
+                        <div key={ id } style={{ 'marginBottom': '20px' }} >
+                            <p className='ai_input'>{ item?.userInput }</p>
+                            <ReactMarkdown className='ai_response' children={item?.aiResponse ?? ''}
+                                components={{
+                                    code({ className, children }) {
+                                        return ( 
+                                            <code data-copy="true" className={`gspb_code_ai ${className ? className : ''}`}>
+                                                { children }
+                                            </code>
+                                        )
+                                    }
+                                }}
+                            />
+                        </div>
+                    )})
+                }            
             </div>
-        }
+            { openairesponse.length > 0 && 
+                <div className='gsbp_ai_btn' >
+                    <Button
+                        variant='primary'
+                        disabled={ isLoading }
+                        onClick={() => {setAttributes({ openairesponse: [] }); setConversation([]); }}
+                    >
+                        New Chat
+                    </Button>
+                </div>
+            }
         </>
     )
 }

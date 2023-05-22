@@ -22,8 +22,11 @@
 .openai_wrapper{
     border: 1px solid #ebebeb !important;
     .openai_form_wrapper{
-        position: relative;
-        padding: 20px 20px 0;
+        position: absolute;
+        padding: 0 20px;
+        bottom: 0;
+        left: 0;
+        right: 0;
     }
     .openai_textfield input, .openai_textfield textarea{
         border-top-width: 0;
@@ -51,7 +54,11 @@
         z-index: 1;
     }
     .openai_response_wrapper{
-       margin-top: 30px;
+        margin: 30px 0 120px;
+        .chat-container{
+            max-height: 40vh;
+            overflow: auto;
+        }
         .ai_input{
             line-height: 1.2;
             margin: 0 0 16px 0;
@@ -97,14 +104,15 @@
             }
             code{
                 border-radius: 0 0 6px 6px;
-                font-size: 1.1rem;
-                line-height: 1.5rem;
+                font-size: 1rem;
+                line-height: 1.6rem;
                 position: relative;
             }
         }
         .gsbp_ai_btn{
             text-align: center;
             margin-bottom: 20px;
+            margin-top: 20px;
         }
     }
 }

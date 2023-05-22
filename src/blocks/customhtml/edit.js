@@ -62,44 +62,53 @@ function edit(props) {
 
 
 	// call api on form submit, disable input till response is received.
-	function onSubmitHandler(e){
-		e.preventDefault();
-		if( userInput === ''){ return ; }
-		setIsLoading(true);
+
+	const handleKeyPress = (event) => {
+		if(event.key === 'Enter'){
+			if( userInput === ''){ return ; }
+			setIsLoading(true);
+		
+			const modifiedInput = `Please reply below question in markdown format.\n ${userInput}`;
+			const inputPayload  = {
+				role: 'user',
+				content: modifiedInput
+			};
+			const apiPayload = [ ...conversation, inputPayload ];
 	
-		const modifiedInput = `Please reply below question in markdown format.\n ${userInput}`;
-		const inputPayload  = {
-			role: 'user',
-			content: modifiedInput
-		};
-		const apiPayload = [ ...conversation, inputPayload ];
-
-		wp.apiFetch({
-			path: `/greenshift/v1/gspb_open_ai`,
-			method: 'POST',
-			data: { "messages" : apiPayload }
-		}).then(response => {
-			const data = JSON.parse(response);
-			if(data?.response){
-				const responseData = JSON.parse( data.response );
-				const responseString = responseData?.choices[0]?.message?.content;
-
-				if( responseString !== '' ){
-					const newResponse = {
-						userInput: userInput,
-						aiResponse : responseString
+			wp.apiFetch({
+				path: `/greenshift/v1/gspb_open_ai`,
+				method: 'POST',
+				data: { "messages" : apiPayload }
+			}).then(response => {
+				const data = JSON.parse(response);
+				if(data.success){
+					if(data?.response){
+						const responseData = JSON.parse( data.response );
+						const responseString = responseData?.choices[0]?.message?.content;
+		
+						if( responseString !== '' ){
+							const newResponse = {
+								userInput: userInput,
+								aiResponse : responseString
+							}
+							setConversation([ ...conversation, { role: 'assistant', content: responseString }]);
+							const newResponseData = [ ...openairesponse, newResponse ];
+							setAttributes( { openairesponse : newResponseData } );
+						}
 					}
-					setConversation([ ...conversation, { role: 'assistant', content: responseString }]);
-					const newResponseData = [ newResponse, ...openairesponse ];
-					setAttributes( { openairesponse : newResponseData } );
+					setUserInput('');
+				} else {
+					wp.data.dispatch("core/notices").createErrorNotice(
+						__( data.message , "greenshift-animation-and-page-builder-blocks"),
+						{ type: "snackbar" }
+					);
 				}
-			}
-			setUserInput('');
-			setIsLoading(false);
-		}).catch(error => {
-			setIsLoading(false);
-		});
-	};
+				setIsLoading(false);
+			}).catch(error => {
+				setIsLoading(false);
+			});
+		}
+	}
 
 	// collapse Effect
 	useEffect(() => {
@@ -220,15 +229,16 @@ function edit(props) {
 					{ codeMode === 'ai' &&
 						<div className='openai_wrapper'>
 							<div className='openai_form_wrapper'>
-								<form method="post" onSubmit={ onSubmitHandler } >
+								
 									<TextareaControl
 										className='openai_textfield'
 										placeholder='Enter something & hit enter...'
 										value={ userInput }
 										onChange={( value ) => setUserInput( value )}
 										disabled={ isLoading }
+										onKeyPress={ handleKeyPress }
 									/>
-								</form>
+								
 								{ isLoading &&
 									<div className='loader'>
 										<Spinner />
