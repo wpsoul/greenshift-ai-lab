@@ -6,6 +6,7 @@ import { useState, useRef, useEffect } from '@wordpress/element';
 import { BlockControls, useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import { ToolbarButton, Spinner, TextareaControl, ToolbarGroup, DropdownMenu, ToggleControl, PanelBody, Button } from '@wordpress/components';
 import { select } from '@wordpress/data';
+import { RawHTML } from '@wordpress/element';
 
 /**
  * Internal dependencies
@@ -309,6 +310,8 @@ function edit(props) {
 		)
 	};
 
+	const PRETTY_STYLES = `.gspb-prettyform input:not(.wp-element-button),.gspb-prettyform select,.gspb-prettyform textarea{border:1px solid var(--wp--preset--color--lightborder,#cecece6b);border-radius:0;width:100%;padding:9px 15px;transition:border-color .3s cubic-bezier(.165,.84,.44,1),background-color .3s cubic-bezier(.165,.84,.44,1);background-color:var(--wp--preset--color--inputbg,#fafbfd);border-radius:0;color:var(--wp--preset--color--inputtext,#444);font-size:var(--wp--preset--font-size--medium,1.2rem);font-weight:var(--wp--custom--font-weight--normal,400);line-height:var(--wp--custom--line-height--medium,1.6)}.gspb-prettyform input:not(.wp-element-button),.gspb-prettyform select{font-size:var(--wp--preset--font-size--small,1rem);line-height:var(--wp--custom--line-height--medium,)}.gspb-prettyform select{padding-right:25px;background-image:url("data:image/svg+xml,%3Csvg width='21' height='13' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.5.379L20.621 2.5 10.5 12.621.379 2.5 2.5.379l8 8z' fill='%234F5D6D' fill-rule='nonzero'/%3E%3C/svg%3E");background-repeat:no-repeat,repeat;background-size:8px auto,100%;background-position:right 10px top 50%,0 0}.gspb-prettyform textarea{padding:10px 20px}.gspb-prettyform input[type=checkbox],.gspb-prettyform input[type=radio]{width:16px;height:16px;flex-shrink:0;display:inline-block;margin:0;margin-right:8px;text-align:center;vertical-align:middle;cursor:pointer;border:0}.gspb-prettyform input[type=checkbox],.gspb-prettyform input[type=radio]{box-sizing:border-box;padding:0}.gspb-prettyform input:focus,.gspb-prettyform textarea:focus{background-color:var(--wp--preset--color--lightbg,#f9fafb)}.gspb-prettyform input[type=button]:not(.wp-element-button),.gspb-prettyform input[type=email],.gspb-prettyform input[type=search],.gspb-prettyform input[type=submit]:not(.wp-element-button),.gspb-prettyform input[type=text],.gspb-prettyform select,.gspb-prettyform textarea{-webkit-appearance:none;appearance:none}.gspb-prettyform ::placeholder{color:var(--wp--preset--color--black,#000);font-size:var(--wp--preset--font-size--small,1rem);opacity:.6}`;
+
 	return (
 		<div {...blockProps}>
 			{!onlyphp &&
@@ -436,12 +439,9 @@ function edit(props) {
 						{codeMode === 'preview' &&
 							<>
 								{(htmlcontent || phpPreview) &&
-									<Preview
-										content={`<div class="gspb-preview-smartcode${prettyform ? ' gspb-prettyform' : ''}">${phpPreview}${htmlcontent}</div>`}
-										blockStyle={[csscontent]}
-										blockScript={scriptcontent}
-										isSelected={isSelected}
-									/>
+									<div className={`gspb-preview-smartcode${prettyform ? ' gspb-prettyform' : ''}`}>
+										<RawHTML>{phpPreview}{htmlcontent}</RawHTML>
+									</div>
 								}
 							</>
 						}
@@ -525,13 +525,13 @@ function edit(props) {
 					</>
 				}
 			</div>
-			{csscontent &&
+
 				<style
 					dangerouslySetInnerHTML={{
-						__html: csscontent,
+						__html: csscontent+prettyform?PRETTY_STYLES:'',
 					}}
 				/>
-			}
+			
 		</div>
 	);
 }

@@ -73,10 +73,26 @@ export default function OpenAIResponse ( props ) {
                     case "html":
                     case "xml":
                         if(button.dataset.type === "add" && htmlcontent){
+                            text = text.replace('<!DOCTYPE html>', "");
+                            text = text.replace('<html>', "");
+                            text = text.replace('</html>', "");
+                            text = text.replace('<head>', "");
+                            text = text.replace('</head>', "");
+                            text = text.replace('<body>', "");
+                            text = text.replace(/<title>[^<]*<\/title>/gi, "");
+                            text = text.replace('</body>', "");
                             setAttributes({ htmlcontent: htmlcontent + text });
                             button.innerHTML = "Copied to html code area!";
                             updateButtonText( button,prevtext);
                         }else{
+                            text = text.replace('<!DOCTYPE html>', "");
+                            text = text.replace('<html>', "");
+                            text = text.replace('</html>', "");
+                            text = text.replace('<head>', "");
+                            text = text.replace('</head>', "");
+                            text = text.replace('<body>', "");
+                            text = text.replace(/<title>[^<]*<\/title>/gi, "");
+                            text = text.replace('</body>', "");
                             setAttributes({ htmlcontent: text }) 
                             button.innerHTML = "Placed in html code area!";
                             updateButtonText( button,prevtext);
