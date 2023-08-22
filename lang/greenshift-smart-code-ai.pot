@@ -1,0 +1,167 @@
+# Copyright (C) 2022 Gambit Technologies, Inc
+# This file is distributed under the same license as the Stackable - Gutenberg Blocks plugin.
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Greenshift\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/stackable-ultimate-gutenberg-blocks\n"
+"POT-Creation-Date: 2023-08-19 16:57+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: esc_html_e;__;_e;esc_attr_e;esc_html__;esc_attr__;_n_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: src\n"
+"X-Poedit-SearchPathExcluded-1: node_modules\n"
+"X-Poedit-SearchPathExcluded-2: libs_beauty\n"
+"X-Poedit-SearchPathExcluded-3: libs\n"
+
+#: build/indexgs.js:180
+msgid "Align Left"
+msgstr ""
+
+#: build/indexgs.js:184
+msgid "Align Center"
+msgstr ""
+
+#: build/indexgs.js:188
+msgid "Align Right"
+msgstr ""
+
+#: build/indexgs.js:223
+msgid "Iframe Settings"
+msgstr ""
+
+#: build/indexgs.js:225
+msgid "Iframe URL"
+msgstr ""
+
+#: build/indexgs.js:236
+msgid "Iframe Title"
+msgstr ""
+
+#: build/indexgs.js:244
+msgid "Disable Lazy loading"
+msgstr ""
+
+#: build/indexgs.js:252
+msgid "Minimum Height"
+msgstr ""
+
+#: build/indexgs.js:260
+msgid "Sizing"
+msgstr ""
+
+#: build/indexgs.js:268
+msgid "Spacing"
+msgstr ""
+
+#: build/indexgs.js:276
+msgid "Border"
+msgstr ""
+
+#: build/indexgs.js:283
+msgid "Background and Opacity"
+msgstr ""
+
+#: build/indexgs.js:293
+msgid "Position"
+msgstr ""
+
+#: build/indexgs.js:300
+msgid "Responsive and Custom CSS"
+msgstr ""
+
+#: build/indexgs.js:327
+msgid "Add Iframe URL"
+msgstr ""
+
+#: build/indexgs.js:399
+msgid "Smart Iframe Embedding"
+msgstr ""
+
+#: build/indexgs.js:400
+msgid "Better iframe"
+msgstr ""
+
+#: greenshiftai.php:29
+msgid "GreenShift Code AI"
+msgstr ""
+
+#: greenshiftai.php:83
+msgid "Code Snippets"
+msgstr ""
+
+#: greenshiftai.php:84
+msgid "Code Snippet"
+msgstr ""
+
+#: greenshiftai.php:85
+msgid "Add New Code Snippet"
+msgstr ""
+
+#: greenshiftai.php:86
+msgid "Edit Code Snippet"
+msgstr ""
+
+#: greenshiftai.php:87
+msgid "New Code Snippet"
+msgstr ""
+
+#: greenshiftai.php:88
+msgid "View Code Snippet"
+msgstr ""
+
+#: greenshiftai.php:89
+msgid "Search Code Snippets"
+msgstr ""
+
+#: greenshiftai.php:90
+msgid "No code snippets found"
+msgstr ""
+
+#: greenshiftai.php:91
+msgid "No code snippets found in Trash"
+msgstr ""
+
+#: greenshiftai.php:242
+msgid "Sorry, your nonce did not verify."
+msgstr ""
+
+#: greenshiftai.php:270
+msgid "Greenshift Code AI Lab"
+msgstr ""
+
+#: greenshiftai.php:276
+msgid "Open AI API Key"
+msgstr ""
+
+#: greenshiftai.php:280
+msgid "Get an API Key"
+msgstr ""
+
+#: greenshiftai.php:285
+msgid "Open AI Model"
+msgstr ""
+
+#: greenshiftai.php:297
+msgid "Save settings"
+msgstr ""
+
+#: greenshiftai.php:307 greenshiftai.php:308
+msgid "Smart Code AI"
+msgstr ""
+
+#: greenshiftai.php:328
+#, php-format
+msgid "Please, activate %s plugin to extend Greenshift Smart Code AI Lab"
+msgstr ""
+
+#: greenshiftai.php:494
+msgid "An error occurred!"
+msgstr ""

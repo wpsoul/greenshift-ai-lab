@@ -1,0 +1,7 @@
+{
+	"apiVersion": 3,
+	"name": "greenshift-blocks/smartframe",
+	"category":"greenShiftCodeAi",
+	"editorStyle": "greenShiftAiGS-block-css",
+	"editorScript": "greenShiftAiGS-block-js"
+}

@@ -3,23 +3,22 @@
 */
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
+import AceEditor from 'react-ace';
 import { escapeHTML } from '@wordpress/escape-html';
 import { Button, TextControl, ToggleControl } from '@wordpress/components';
-import { useState, useRef, useEffect, RawHTML} from '@wordpress/element';
+import { useState, useEffect, useRef } from '@wordpress/element';
 
-import { PlainText } from '@wordpress/block-editor';
-import hljs from 'highlight.js/lib/core';
-import javascript from 'highlight.js/lib/languages/javascript';
-hljs.registerLanguage('javascript', javascript);
-import xml from 'highlight.js/lib/languages/xml';
-hljs.registerLanguage('xml', xml);
-import json from 'highlight.js/lib/languages/json';
-hljs.registerLanguage('json', json);
-import css from 'highlight.js/lib/languages/css';
-hljs.registerLanguage('css', css);
-import php from 'highlight.js/lib/languages/php';
-hljs.registerLanguage('php', php);
-hljs.configure({ignoreUnescapedHTML:true});
+import "ace-builds/src-min-noconflict/ext-language_tools";
+import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/mode-xml";
+import "ace-builds/src-noconflict/mode-html";
+import "ace-builds/src-noconflict/mode-css";
+import "ace-builds/src-noconflict/mode-php";
+import "ace-builds/src-noconflict/snippets/php";
+import "ace-builds/src-noconflict/snippets/html";
+import "ace-builds/src-noconflict/snippets/css";
+import "ace-builds/src-noconflict/snippets/javascript";
+import "ace-builds/src-noconflict/theme-monokai";
 
 /**
  * Internal dependencies
@@ -31,25 +30,17 @@ export default function Gspbcode(props) {
     const { code, language, onchange, setAttributes } = props;
     const { onlyphp, snippetID, executeSnippet, phpcontent, phpcontentregistered } = props.attributes;
 
+    let editorACE = useRef();
+
+    useEffect(() => {
+        let editorACEcurrent = editorACE.current;
+        editorACEcurrent.editor.renderer.attachToShadowRoot();
+    }, []);
+            
+
     const codeHanler = (content) => {
         onchange(content);
     };
-
-    const [ height, setHeight ] =  useState('auto');
-    const textAreaRef = useRef( null );
-    const markdDownWrapper = useRef(null);
-    useEffect(() => {
-        setHeight(textAreaRef?.current?.scrollHeight ? (textAreaRef.current.scrollHeight + 'px') : 'auto');
-    }, [code]);
-    useEffect(() => {
-        const currentRef = markdDownWrapper?.current;
-        if(currentRef){
-            currentRef.querySelectorAll('pre').forEach(el => {
-                const codeEle = el.getElementsByTagName('code')[0];
-                    hljs.highlightElement(codeEle);  
-            });           
-        }
-    });
 
     const [isExecuting, setIsExecuting] = useState(false);
 
@@ -75,10 +66,6 @@ export default function Gspbcode(props) {
             if (response.id) {
                 setAttributes({ snippetID: response.id, phpcontentregistered: phpcontent });
                 setIsExecuting(false);
-                wp.data.dispatch("core/notices").createErrorNotice(
-					__("Snippet is registered", "greenshift-smart-code-ai"),
-					{ type: "snackbar" }
-				);
             }
         });
 
@@ -106,10 +93,6 @@ export default function Gspbcode(props) {
             if (response.id) {
                 setAttributes({ snippetID: response.id, phpcontentregistered: phpcontent });
                 setIsExecuting(false);
-                wp.data.dispatch("core/notices").createErrorNotice(
-					__("Snippet is updated", "greenshift-smart-code-ai"),
-					{ type: "snackbar" }
-				);
             }
         }, error => {
             if (error.message == 'Invalid post ID.') {
@@ -123,37 +106,41 @@ export default function Gspbcode(props) {
         );
 
     }
-    
 
     return (
         <div className="gspb_syntext_heighlighter">
-            <div 
+            <div
                 className="gspb_code_viewer"
-                role="button"
-                tabIndex={0}
-                onKeyDown={() => textAreaRef.current?.focus()}
-                onClick={() => textAreaRef.current?.focus()}
-                ref={ markdDownWrapper }
             >
-                <div style={{ height: height, minHeight:70 }}>
-                    <pre>
-                        <code className={`language-${language ? language : ''}`}>
-                            {code}  
-                        </code>
-                    </pre>
-                </div>
-                <div className="code_input">
-                    <PlainText  
-                        onChange={ codeHanler }
-                        value={ code }
-                        className="gspb_code_textarea"
-                        placeholder={ __( 'Write Here…', 'greenshift-smart-code-ai' ) }
-                        aria-label={ __( language ) }
-                        ref = { textAreaRef }
-                    />
+                <div>
+
+                    <AceEditor
+                        placeholder={__('Write Here your code…', 'greenshift-smart-code-ai')}
+                        mode={`${language ? language : ''}`}
+                        ref={editorACE}
+                        theme="monokai"
+                        onChange={codeHanler}
+                        fontSize={15}
+                        showPrintMargin={false}
+                        showGutter={true}
+                        highlightActiveLine={false}
+                        value={code}
+                        maxLines={Infinity}
+                        minLines={3}
+                        height={"auto"}
+                        width="100%"
+                        setOptions={{
+                            enableBasicAutocompletion: true,
+                            enableLiveAutocompletion: true,
+                            enableSnippets: true,
+                            showLineNumbers: true,
+                            tabSize: 4,
+                            useWorker: false
+                        }} />
+
                 </div>
             </div>
-            {(!onlyphp && language == 'php' && phpcontent) &&
+            {(!onlyphp && language == 'php') &&
                 <div className={`gspb_code_snippet ${snippetID > 0 ? "" : " gspb_code_snippet_create_new"}`}>
                     <div className={`gspb_code_snippet_create`} >
                         {snippetID > 0

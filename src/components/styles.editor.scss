@@ -1,70 +1,112 @@
-.hljs {
-    background: #15202b;
-    color: white;
+pre code.hljs {
     display: block;
-    padding: 16px;
     overflow-x: auto;
-    border-radius: 6px;
-    .hljs-variable{
-        color: #43bef9;
-    }
-    .hljs-name{
-        color: #ff9999;
-    }
-    .hljs-tag{
-        color: #88ccbb;
-    }
-    .hljs-section, .hljs-title {
-        color: #f22c3d;
-    }
-    .hljs-deletion, .hljs-number, .hljs-quote, .hljs-selector-class, .hljs-selector-id, .hljs-string, .hljs-template-tag, .hljs-type {
-        color: #df3079;
-    }
-    .hljs-addition, .hljs-built_in, .hljs-bullet, .hljs-code {
-        color: #e9950c;
-    }
-    .hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-tag,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id{
-        color: #c5ad00;
-    }
-    .hljs-link, .hljs-operator, .hljs-regexp, .hljs-selector-attr, .hljs-selector-pseudo, .hljs-symbol, .hljs-template-variable {
-        color: white;
-    }
-    .hljs-comment,.hljs-params{
-        color: #3fa526
-    }
+    padding: 1em
 }
 
-.gspb_syntext_heighlighter{
-    background-color: #15202b;
-    padding: 10px;
-    .gspb_code_viewer{
+code.hljs {
+    padding: 3px 5px
+}
+
+.hljs {
+    color: #a9b7c6;
+    background: #282b2e
+}
+
+.hljs-bullet,
+.hljs-literal,
+.hljs-number,
+.hljs-symbol {
+    color: #6897bb
+}
+
+.hljs-deletion,
+.hljs-keyword,
+.hljs-selector-tag {
+    color: #cc7832
+}
+
+.hljs-link,
+.hljs-template-variable,
+.hljs-variable {
+    color: #91c187
+}
+
+.hljs-comment,
+.hljs-quote {
+    color: grey
+}
+
+.hljs-meta {
+    color: #bbb529
+}
+
+.hljs-addition,
+.hljs-attribute,
+.hljs-string {
+    color: #91c187
+}
+
+.hljs-section,
+.hljs-title,
+.hljs-type {
+    color: #ffc66d
+}
+
+.hljs-name,
+.hljs-selector-class,
+.hljs-selector-id {
+    color: #e8bf6a
+}
+
+.hljs-emphasis {
+    font-style: italic
+}
+
+.hljs-strong {
+    font-weight: 700
+}
+
+.gspb_syntext_heighlighter {
+    .gspb_code_viewer {
         position: relative;
-        pre{
-            white-space: pre-wrap; 
+        background: #282b2e;
+
+        pre {
+            white-space: pre-wrap;
             margin: 0;
             font-size: 1rem;
             line-height: 1.6rem;
-            code{
-                padding: 5px !important;
+
+            code {
+                padding: 15px !important;
+                border-radius: 0px;
             }
         }
-        .code_input{
-            position: absolute; 
+
+        .code_input {
+            position: absolute;
             top: 0;
             right: 0;
             bottom: 0;
-            left: 0; 
+            left: 0;
             width: 100%;
             height: 100%;
-            textarea{
-                background-color: transparent; 
-                color: transparent; 
-                outline: 0; 
+
+            textarea {
+                background-color: transparent;
+                color: transparent;
+                outline: 0;
                 font-family: monospace;
                 caret-color: white;
                 font-size: 1rem;
                 line-height: 1.6rem;
-                padding: 5px;
+                padding: 15px;
+
+                &:focus {
+                    outline: none;
+                    box-shadow: none;
+                }
             }
         }
     }

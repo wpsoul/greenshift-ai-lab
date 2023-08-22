@@ -1,0 +1,22 @@
+
+.gspb_placeholder_iframe_ai{
+    border: 1px solid #ebebeb !important;
+    background-color: #fff;
+    color: #111;
+    width: 100%;
+    padding: 20px;
+    .components-base-control__label{text-transform: none;font-size: 15px; color: #666;}
+    .components-text-control__input{
+        border: none;
+        border-bottom: 1px solid #e0e4eb;
+        padding: 0 0 10px 0;
+        width: 100%;
+        margin-top: 10px;
+        box-shadow: none;
+        &:focus{
+            border-bottom: 1px solid #666;
+            box-shadow: none;
+            outline: none;
+        }
+    }
+}

@@ -11,4 +11,5 @@
 
 // Import sass styles
 
-import './blocks/customhtml';
+import './blocks/smartcode';
+import './sidebar';
