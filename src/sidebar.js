@@ -12,7 +12,7 @@ const MetaFieldsInputs = () => {
             <TextControl
                 label={__('Shortcode', 'greenshiftquery')}
                 help={__('Copy and paste this shortcode into your post or page content to execute it', 'greenshift-smart-code-ai')}
-                value={`[gs_codesnippet id="${wp.data.select("core/editor").getCurrentPostId()}"]`}
+                value={`[gspb_codesnippet id="${wp.data.select("core/editor").getCurrentPostId()}"]`}
             />
         </>
     );

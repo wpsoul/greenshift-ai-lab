@@ -70,7 +70,7 @@ function edit(props) {
 
     // Set Unique Block ID
     gspb_setBlockId(props);
-	//Render Animation Properties
+    //Render Animation Properties
 
 
     const blockId = `gspb_id-${id || 'gsframe_no_parent_gs'}`;
@@ -287,32 +287,32 @@ function edit(props) {
         </BlockControls>,
         <BlockToolBar {...props} />,
         <>
-                <div {...blockProps}>
-                    {src &&
-                        <iframe class={frameId} src={src} width='100%' height={minHeight} title={title} />
-                    }
-                    {!src &&
-                        <div className="gspb_placeholder_iframe_ai">
-                            <TextControl
-                                label={__('Add Iframe URL', 'greenshift-smart-code-ai')}
-                                value={src}
-                                onChange={(value) => {
-                                    if (value.includes('streamlit.app') && !value.endsWith('?embedded=true')) {
-                                        value += '?embedded=true';
-                                    }
-                                    setAttributes({
-                                        src: value,
-                                    });
-                                }}
-                            />
-                        </div>
-                    }
-                </div>
-                <style
-                    dangerouslySetInnerHTML={{
-                        __html: editor_css,
-                    }}
-                />
+            <div {...blockProps}>
+                {src &&
+                    <iframe class={frameId} src={src} width='100%' height={minHeight} title={title} />
+                }
+                {!src &&
+                    <div className="gspb_placeholder_iframe_ai">
+                        <TextControl
+                            label={__('Add Iframe URL', 'greenshift-smart-code-ai')}
+                            value={src}
+                            onChange={(value) => {
+                                if (value.includes('streamlit.app') && !value.endsWith('?embedded=true')) {
+                                    value += '?embedded=true';
+                                }
+                                setAttributes({
+                                    src: value,
+                                });
+                            }}
+                        />
+                    </div>
+                }
+            </div>
+            <style
+                dangerouslySetInnerHTML={{
+                    __html: editor_css,
+                }}
+            />
         </>
     ];
 }

@@ -26,7 +26,7 @@ if(!function_exists('gspb_greenShiftCodeAi_category')){
 			array(
 				array(
 					'slug'  => 'greenShiftCodeAi',
-					'title' => __( 'GreenShift Code AI', 'greenshift-smart-code-ai'),
+					'title' => esc_html__( 'GreenShift Code AI', 'greenshift-smart-code-ai'),
 				),
 			),
 			$categories
@@ -80,15 +80,15 @@ if(!function_exists('greenShiftAi_register_init')){
 
 		// Set labels for the post type
 		$labels = array(
-			'name'               => __( 'Code Snippets', 'greenshift-smart-code-ai' ),
-			'singular_name'      => __( 'Code Snippet', 'greenshift-smart-code-ai' ),
-			'add_new_item'       => __( 'Add New Code Snippet', 'greenshift-smart-code-ai' ),
-			'edit_item'          => __( 'Edit Code Snippet', 'greenshift-smart-code-ai' ),
-			'new_item'           => __( 'New Code Snippet', 'greenshift-smart-code-ai' ),
-			'view_item'          => __( 'View Code Snippet', 'greenshift-smart-code-ai' ),
-			'search_items'       => __( 'Search Code Snippets', 'greenshift-smart-code-ai' ),
-			'not_found'          => __( 'No code snippets found', 'greenshift-smart-code-ai' ),
-			'not_found_in_trash' => __( 'No code snippets found in Trash', 'greenshift-smart-code-ai' )
+			'name'               => esc_html__( 'Code Snippets', 'greenshift-smart-code-ai' ),
+			'singular_name'      => esc_html__( 'Code Snippet', 'greenshift-smart-code-ai' ),
+			'add_new_item'       => esc_html__( 'Add New Code Snippet', 'greenshift-smart-code-ai' ),
+			'edit_item'          => esc_html__( 'Edit Code Snippet', 'greenshift-smart-code-ai' ),
+			'new_item'           => esc_html__( 'New Code Snippet', 'greenshift-smart-code-ai' ),
+			'view_item'          => esc_html__( 'View Code Snippet', 'greenshift-smart-code-ai' ),
+			'search_items'       => esc_html__( 'Search Code Snippets', 'greenshift-smart-code-ai' ),
+			'not_found'          => esc_html__( 'No code snippets found', 'greenshift-smart-code-ai' ),
+			'not_found_in_trash' => esc_html__( 'No code snippets found in Trash', 'greenshift-smart-code-ai' )
 		);
 			
 		// Set other options for the post type
@@ -237,8 +237,8 @@ if(!function_exists('gspb_gutenbergAI_is_parent_active')){
 
 function greenshift_smart_code_ai_settings_callback(){
 
-	if (isset($_POST['gspb_save_settings'])) { // Delay script saving
-		if (!wp_verify_nonce($_POST['gspb_settings_field'], 'gspb_settings_page_action')) {
+	if (isset($_POST['gspb_save_settings'])) { // save settings
+		if (!wp_verify_nonce(sanitize_text_field( wp_unslash($_POST['gspb_settings_field'])), 'gspb_settings_page_action')) {
 			esc_html_e("Sorry, your nonce did not verify.", 'greenshift-smart-code-ai');
 			return;
 		}
@@ -304,8 +304,8 @@ if(!function_exists('greenshift_smartcodeai_settings')){
 	function greenshift_smartcodeai_settings(){
 		add_submenu_page(
 			'options-general.php',
-			__( 'Smart Code AI', 'greenshift-smart-code-ai' ),
-		   __( 'Smart Code AI','greenshift-smart-code-ai' ),
+			esc_html__( 'Smart Code AI', 'greenshift-smart-code-ai' ),
+		   esc_html__( 'Smart Code AI','greenshift-smart-code-ai' ),
 		   'manage_options',
 		   'greenshift-smart-code-ai',
 		   'greenshift_smart_code_ai_settings_callback',
@@ -325,7 +325,7 @@ if ( ! gspb_gutenbergAI_is_parent_active()) {
 function greenshift_smartcodeai_admin_notice_warning() {
 	?>
 	<div class="notice notice-warning">
-		<p><?php printf( __( 'Please, activate %s plugin to extend Greenshift Smart Code AI Lab' ), '<a href="https://wordpress.org/plugins/greenshift-smart-code-ai" target="_blank">Greenshift</a>' ) ; ?></p>
+		<p><?php printf( esc_html__( 'Please, activate %s plugin to extend Greenshift Smart Code AI Lab' ), '<a href="https://wordpress.org/plugins/greenshift-smart-code-ai" target="_blank">Greenshift</a>' ) ; ?></p>
 	</div>
 	<?php
 }
@@ -398,7 +398,7 @@ function gspb_get_openai_data(WP_REST_Request $request)
 	if(empty( $openaiapikey )){
 		return json_encode(array(
 			'success' => false,
-			'message' => 'You must need to add API key in plugin settings.' ,
+			'message' => 'You must need to add API key in plugin settings or in Greenshift - Settings - API keys.' ,
 		));
 	}else{
 		return json_encode(array(
@@ -414,8 +414,8 @@ add_action( 'rest_api_init', 'register_block_core_site_logo_setting', 10 );
 /**
  * Register a core site setting for a site logo
  */
-add_action( 'rest_api_init', 'register_my_setting' );
-function register_my_setting() {
+add_action( 'rest_api_init', 'greenshift_register_ai_setting' );
+function greenshift_register_ai_setting() {
 
 	$args = array(
 		'sanitize_callback' => 'sanitize_text_field',
@@ -434,7 +434,7 @@ function greenshift_smartcodeai_render_snippet_shortcode($atts) {
 			'id' => '',
 	  	),
 	  	$atts,
-	  	'gs_codesnippet'
+	  	'gspb_codesnippet'
 	);
 
 	$content = '';
@@ -465,10 +465,10 @@ function greenshift_smartcodeai_render_snippet_shortcode($atts) {
 		
 					} catch (Exception $e) {
 						if (is_user_logged_in()) {
-							echo $e->getMessage();
+							echo esc_html($e->getMessage());
 						}
 						else {
-							echo __("An error occurred!", 'greenshift_smart-code-ai');
+							esc_html_e("An error occurred!", 'greenshift_smart-code-ai');
 						}
 					}
 		
@@ -481,4 +481,4 @@ function greenshift_smartcodeai_render_snippet_shortcode($atts) {
 }
   
 // register shortcode
-add_shortcode('gs_codesnippet', 'greenshift_smartcodeai_render_snippet_shortcode');
+add_shortcode('gspb_codesnippet', 'greenshift_smartcodeai_render_snippet_shortcode');

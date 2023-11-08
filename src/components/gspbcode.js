@@ -215,7 +215,7 @@ export default function Gspbcode(props) {
                     {snippetID > 0 &&
                         <div className="gspb_code_snippet_shortcode">
                             <TextControl
-                                value={`[gs_codesnippet id="${snippetID}"]`}
+                                value={`[gspb_codesnippet id="${snippetID}"]`}
                                 onChange={() => { }}    // This is a dummy function to avoid the error
                             />
                             <Button

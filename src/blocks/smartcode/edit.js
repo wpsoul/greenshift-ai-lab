@@ -43,7 +43,7 @@ function edit(props) {
 	};
 
 	const codeValueHandler = (code) => {
-		if (!isAdmin) {
+		if (typeof isAdmin !== 'undefined' && !isAdmin) {
 			wp.data.dispatch("core/notices").createErrorNotice(
 				__("You need to be admin to update block", "greenshift-smart-code-ai"),
 				{ type: "snackbar" }
@@ -141,7 +141,7 @@ function edit(props) {
 
 	const generateResponse = async () => {
 
-		if (!isAdmin) {
+		if (typeof isAdmin !== 'undefined' && !isAdmin) {
 			wp.data.dispatch("core/notices").createErrorNotice(
 				__("You need to be admin to use block", "greenshift-smart-code-ai"),
 				{ type: "snackbar" }
