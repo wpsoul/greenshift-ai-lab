@@ -4,7 +4,7 @@
  * Description: Smart code blocks with AI for core editor
  * Author: Wpsoul
  * Author URI: https://greenshiftwp.com
- * Version: 0.1
+ * Version: 0.2
  */
 
 // Exit if accessed directly.

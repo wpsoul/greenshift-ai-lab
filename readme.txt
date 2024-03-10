@@ -8,7 +8,7 @@ Requires at least: 6.2
 Tested up to: 6.4
 Requires PHP: 7.0
 License: GPLv2 or later
-Stable tag: 0.1
+Stable tag: 0.2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 
@@ -35,3 +35,17 @@ Download Smart Code AI today and witness the future of coding with AI assistance
 == For Developers ==
 
 View the source files for this project on [github](https://github.com/wpsoul/greenshift-ai-lab).
+
+
+== Screenshots ==
+
+1. **Smart insertion.**  Easily copy AI code snippets to proper code section
+2. **Code editor.** Use advanced code editor with autocomplete snippets
+3. **AI helper.** Use OPENAI for code generation and code helper. 
+
+
+== Changelog ==
+
+= 0.2 =
+* Added: support for Greenshift Code field in Element block
+* Added: support for Greenshift field for Custom css

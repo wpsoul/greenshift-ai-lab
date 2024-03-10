@@ -13,3 +13,10 @@
 
 import './blocks/smartcode';
 import './sidebar';
+import GspbcodeFluent from './components/gspbcodewithAceFluent';
+
+window.gspbcodelibs = {
+	components: {},
+};
+
+gspbcodelibs.components.GspbcodeFluent = GspbcodeFluent;
