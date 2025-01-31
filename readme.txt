@@ -8,7 +8,7 @@ Requires at least: 6.2
 Tested up to: 6.4
 Requires PHP: 7.0
 License: GPLv2 or later
-Stable tag: 0.2
+Stable tag: 0.3
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 
@@ -45,6 +45,12 @@ View the source files for this project on [github](https://github.com/wpsoul/gre
 
 
 == Changelog ==
+
+
+= 0.3 =
+* Added: support for Anthropic models
+* Added: support for DeepSeek Chat
+* Added: all currentavailable OpenAI models
 
 = 0.2 =
 * Added: support for Greenshift Code field in Element block

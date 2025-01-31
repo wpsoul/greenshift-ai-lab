@@ -90,53 +90,6 @@ function edit(props) {
 
 	// call api on form submit, disable input till response is received.
 
-	const handleKeyPress = (event) => {
-
-		if (userInput === '') { return; }
-		setIsLoading(true);
-
-		const modifiedInput = `${userInput}`;
-		const inputPayload = {
-			role: 'user',
-			content: modifiedInput
-		};
-		const apiPayload = [...conversation, inputPayload];
-
-		wp.apiFetch({
-			path: `/greenshift/v1/gspb_open_ai`,
-			method: 'POST',
-			data: { "messages": apiPayload }
-		}).then(response => {
-			const data = JSON.parse(response);
-			if (data.success) {
-				if (data?.response) {
-					const responseData = JSON.parse(data.response);
-					const responseString = responseData?.choices[0]?.message?.content;
-
-					if (responseString !== '') {
-						const newResponse = {
-							userInput: userInput,
-							aiResponse: responseString
-						}
-						setConversation([...conversation, { role: 'assistant', content: responseString }]);
-						const newResponseData = [...openairesponse, newResponse];
-						setAttributes({ openairesponse: newResponseData });
-					}
-				}
-				setUserInput('');
-			} else {
-				wp.data.dispatch("core/notices").createErrorNotice(
-					data.message,
-					{ type: "snackbar" }
-				);
-			}
-			setIsLoading(false);
-		}).catch(error => {
-			setIsLoading(false);
-		});
-
-	}
-
 	let controller = null;
 
 	const generateResponse = async () => {
@@ -160,7 +113,7 @@ function edit(props) {
 		let resultText = "";
 
 		const keydata = await wp.apiFetch({
-			path: `/greenshift/v1/gspb_open_ai`,
+			path: `/greenshift/v1/model_ai`,
 			method: 'GET',
 		}).then(response => {
 			const data = JSON.parse(response);
@@ -184,59 +137,155 @@ function edit(props) {
 		});
 
 		try {
-			if(!keydata?.key) return;
+			if(!keydata?.key || !keydata?.model) return;
+			let response;
 			// Fetch the response from the OpenAI API with the signal from AbortController
-			const response = await fetch('https://api.openai.com/v1/chat/completions', {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
+			if(keydata.model == 'deepseek-chat' || keydata.model == 'deepseek-reasoner') {
+				response = await fetch('https://api.deepseek.com/chat/completions', {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${keydata.key}`
+					},
+					body: JSON.stringify({
+						model: keydata.model,
+						messages: [{ role: "system", content: "You are a helpful code builder assistant for php, html, css, javascript. Do not use any  other code languages." },{ role: "user", content: userInput }],
+						stream: true // For streaming responses
+					}),
+					signal, // Pass the signal to the fetch request
+				});
+			} else if (keydata.model == 'claude-3-5-sonnet-20241022' || keydata.model == 'claude-3-5-haiku-20241022') {
+				response = await fetch('https://api.anthropic.com/v1/messages', {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"x-api-key": keydata.key,
+						"anthropic-version": "2023-06-01",
+						"anthropic-dangerous-direct-browser-access": "true"
+					},
+					body: JSON.stringify({
+						model: keydata.model,
+						messages: [{ role: "user", content: userInput }],
+						stream: true, // For streaming responses
+						"max_tokens": 4096,
+						"system": "You are a helpful code builder assistant for php, html, css, javascript. Do not use any other code languages."
+					}),
+					signal, // Pass the signal to the fetch request
+				});
+			} else {
+				response = await fetch('https://api.openai.com/v1/chat/completions', {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
 					Authorization: `Bearer ${keydata.key}`,
 				},
 				body: JSON.stringify({
 					model: keydata.model,
 					messages: [{ role: "user", content: userInput }],
 					stream: true, // For streaming responses
-				}),
-				signal, // Pass the signal to the fetch request
-			});
+					}),
+					signal, // Pass the signal to the fetch request
+				});
+			}
 
-			// Read the response as a stream of data
-			const reader = response.body.getReader();
-			const decoder = new TextDecoder("utf-8");
-
-			while (true) {
-				const { done, value } = await reader.read();
-				if (done) {
-					setIsLoading(false);
-					setUserInput('');
-					setAttributes({isFinished: true});
-					break;
-				}
-				// Massage and parse the chunk of data
-				const chunk = decoder.decode(value);
-				const lines = chunk.split("\n");
-				const parsedLines = lines
-					.map((line) => line.replace(/^data: /, "").trim()) // Remove the "data: " prefix
-					.filter((line) => line !== "" && line !== "[DONE]") // Remove empty lines and "[DONE]"
-					.map((line) => JSON.parse(line)); // Parse the JSON string
-
-				for (const parsedLine of parsedLines) {
-					const { choices } = parsedLine;
-					const { delta } = choices[0];
-					const { content } = delta;
-					// Update the UI with the new content
-					if (content) {
-						resultText += content;
-						const newResponse = {
-							userInput: userInput,
-							aiResponse: resultText
+			if(keydata.model == 'claude-3-5-sonnet-20241022' || keydata.model == 'claude-3-5-haiku-20241022') {
+				const reader = response.body.getReader();
+				const decoder = new TextDecoder();
+				let buffer = '';
+				
+				while (true) {
+					const { done, value } = await reader.read();
+					if (done) break;
+					
+					// Append new chunks to buffer and split by double newlines
+					buffer += decoder.decode(value, { stream: true });
+					const lines = buffer.split('\n');
+					buffer = lines.pop() || ''; // Keep last incomplete chunk in buffer
+					
+					for (const line of lines) {
+						if (!line.trim() || line.indexOf('data: ') !== 0) continue;
+						
+						const data = line.slice(6); // Remove 'data: ' prefix
+						if (data === '[DONE]') continue;
+						
+						try {
+							const parsed = JSON.parse(data);
+							if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
+								resultText += parsed.delta.text;
+								const newResponse = {
+									userInput: userInput,
+									aiResponse: resultText
+								};
+								setConversation([...conversation, { role: 'assistant', content: resultText }]);
+								setAttributes({ openairesponse: [...openairesponse, newResponse] });
+							}
+						} catch (e) {
+							console.error('Error parsing Claude message:', e);
 						}
-						setConversation([...conversation, { role: 'assistant', content: resultText }]);
-						const newResponseData = [...openairesponse, newResponse];
-						setAttributes({ openairesponse: newResponseData });
+					}
+				}
+				
+				// Process any remaining buffer content
+				if (buffer) {
+					try {
+						const parsed = JSON.parse(buffer.replace('data: ', ''));
+						if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
+							resultText += parsed.delta.text;
+							const newResponse = {
+								userInput: userInput,
+								aiResponse: resultText
+							};
+							setConversation([...conversation, { role: 'assistant', content: resultText }]);
+							setAttributes({ openairesponse: [...openairesponse, newResponse] });
+						}
+					} catch (e) {
+						console.error('Error parsing final Claude message:', e);
+					}
+				}
+				
+				setIsLoading(false);
+				setUserInput('');
+				setAttributes({isFinished: true});
+			} else{
+				// Read the response as a stream of data
+				const reader = response.body.getReader();
+				const decoder = new TextDecoder("utf-8");
+	
+				while (true) {
+					const { done, value } = await reader.read();
+					if (done) {
+						setIsLoading(false);
+						setUserInput('');
+						setAttributes({isFinished: true});
+						break;
+					}
+					// Massage and parse the chunk of data
+					const chunk = decoder.decode(value);
+					const lines = chunk.split("\n");
+					const parsedLines = lines
+						.map((line) => line.replace(/^data: /, "").trim()) // Remove the "data: " prefix
+						.filter((line) => line !== "" && line !== "[DONE]") // Remove empty lines and "[DONE]"
+						.map((line) => JSON.parse(line)); // Parse the JSON string
+	
+					for (const parsedLine of parsedLines) {
+						const { choices } = parsedLine;
+						const { delta } = choices[0];
+						const { content } = delta;
+						// Update the UI with the new content
+						if (content) {
+							resultText += content;
+							const newResponse = {
+								userInput: userInput,
+								aiResponse: resultText
+							}
+							setConversation([...conversation, { role: 'assistant', content: resultText }]);
+							const newResponseData = [...openairesponse, newResponse];
+							setAttributes({ openairesponse: newResponseData });
+						}
 					}
 				}
 			}
+
 		} catch (error) {
 			// Handle fetch request errors
 			if (signal.aborted) {
