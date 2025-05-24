@@ -4,11 +4,11 @@ Tags: gutenberg, AI, code, html, scripts, css builder, AI code generation, code 
 Author: Wpsoul
 Author URI: https://greenshiftwp.com
 Plugin URI: https://greenshiftwp.com
-Requires at least: 6.2
-Tested up to: 6.4
+Requires at least: 6.5
+Tested up to: 6.9
 Requires PHP: 7.0
 License: GPLv2 or later
-Stable tag: 0.3
+Stable tag: 0.5
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 
@@ -41,11 +41,18 @@ View the source files for this project on [github](https://github.com/wpsoul/gre
 
 1. **Smart insertion.**  Easily copy AI code snippets to proper code section
 2. **Code editor.** Use advanced code editor with autocomplete snippets
-3. **AI helper.** Use OPENAI for code generation and code helper. 
+3. **AI helper.** Use popular AI models for code generation and code helper. 
 
 
 == Changelog ==
 
+= 0.5 =
+* Added: support for Gemini models
+* Added: support for new updated OpenAI, Claude and Gemini models
+
+= 0.4 =
+* Added: support for New Claude models
+* Added: support for New Gemini models
 
 = 0.3 =
 * Added: support for Anthropic models

@@ -140,7 +140,7 @@ function edit(props) {
 			if(!keydata?.key || !keydata?.model) return;
 			let response;
 			// Fetch the response from the OpenAI API with the signal from AbortController
-			if(keydata.model == 'deepseek-chat' || keydata.model == 'deepseek-reasoner') {
+			if(keydata.model.startsWith('deepseek')) {
 				response = await fetch('https://api.deepseek.com/chat/completions', {
 					method: "POST",
 					headers: {
@@ -154,7 +154,7 @@ function edit(props) {
 					}),
 					signal, // Pass the signal to the fetch request
 				});
-			} else if (keydata.model == 'claude-3-5-sonnet-20241022' || keydata.model == 'claude-3-5-haiku-20241022') {
+			} else if (keydata.model.startsWith('claude')) {
 				response = await fetch('https://api.anthropic.com/v1/messages', {
 					method: "POST",
 					headers: {
@@ -169,6 +169,27 @@ function edit(props) {
 						stream: true, // For streaming responses
 						"max_tokens": 4096,
 						"system": "You are a helpful code builder assistant for php, html, css, javascript. Do not use any other code languages."
+					}),
+					signal, // Pass the signal to the fetch request
+				});
+			} else if (keydata.model.startsWith('gemini')) {
+				response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + keydata.model + ':streamGenerateContent?key=' + keydata.key, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						contents: [{
+							parts: [{
+								text: "You are a helpful code builder assistant for php, html, css, javascript. Do not use any other code languages. " + userInput
+							}]
+						}],
+						generationConfig: {
+							temperature: 0.7,
+							topK: 40,
+							topP: 0.95,
+							maxOutputTokens: 4096,
+						}
 					}),
 					signal, // Pass the signal to the fetch request
 				});
@@ -188,7 +209,7 @@ function edit(props) {
 				});
 			}
 
-			if(keydata.model == 'claude-3-5-sonnet-20241022' || keydata.model == 'claude-3-5-haiku-20241022') {
+			if(keydata.model.startsWith('claude')) {
 				const reader = response.body.getReader();
 				const decoder = new TextDecoder();
 				let buffer = '';
@@ -246,7 +267,43 @@ function edit(props) {
 				setIsLoading(false);
 				setUserInput('');
 				setAttributes({isFinished: true});
-			} else{
+			} else if(keydata.model.startsWith('gemini')) {
+				const reader = response.body.getReader();
+				const decoder = new TextDecoder();
+				let buffer = '';
+				
+				while (true) {
+					const { done, value } = await reader.read();
+					if (done) break;
+					
+					buffer += decoder.decode(value, { stream: true });
+					const lines = buffer.split('\n');
+					buffer = lines.pop() || '';
+					
+					for (const line of lines) {
+						if (!line.trim()) continue;
+						
+						try {
+							const parsed = JSON.parse(line);
+							if (parsed.candidates && parsed.candidates[0]?.content?.parts?.[0]?.text) {
+								resultText += parsed.candidates[0].content.parts[0].text;
+								const newResponse = {
+									userInput: userInput,
+									aiResponse: resultText
+								};
+								setConversation([...conversation, { role: 'assistant', content: resultText }]);
+								setAttributes({ openairesponse: [...openairesponse, newResponse] });
+							}
+						} catch (e) {
+							console.error('Error parsing Gemini message:', e);
+						}
+					}
+				}
+				
+				setIsLoading(false);
+				setUserInput('');
+				setAttributes({isFinished: true});
+			} else {
 				// Read the response as a stream of data
 				const reader = response.body.getReader();
 				const decoder = new TextDecoder("utf-8");

@@ -4,7 +4,7 @@
  * Description: Smart code blocks with AI for core editor
  * Author: Wpsoul
  * Author URI: https://greenshiftwp.com
- * Version: 0.3
+ * Version: 0.5
  */
 
 // Exit if accessed directly.
@@ -258,6 +258,11 @@ function greenshift_smart_code_ai_settings_callback(){
 			update_option('greenshift_smartcode_deepseekapikey', $greenshift_smartcode_deepseekapikey);
 		}
 
+		if (isset($_POST['greenshift_smartcode_geminiapikey'])) {
+			$greenshift_smartcode_geminiapikey = sanitize_text_field($_POST['greenshift_smartcode_geminiapikey']);
+			update_option('greenshift_smartcode_geminiapikey', $greenshift_smartcode_geminiapikey);
+		}
+
 
 
 		if (isset($_POST['greenshift_smartcode_openaiapimodel'])) {
@@ -269,6 +274,9 @@ function greenshift_smart_code_ai_settings_callback(){
 	$greenshift_smartcode_openaiapikey = get_option('greenshift_smartcode_openaiapikey');
 	$greenshift_smartcode_openaiapikey = !empty($greenshift_smartcode_openaiapikey) ? $greenshift_smartcode_openaiapikey : '';
 
+	$greenshift_smartcode_geminiapikey = get_option('greenshift_smartcode_geminiapikey');
+	$greenshift_smartcode_geminiapikey = !empty($greenshift_smartcode_geminiapikey) ? $greenshift_smartcode_geminiapikey : '';
+
 	$greenshift_smartcode_claudeapikey = get_option('greenshift_smartcode_claudeapikey');
 	$greenshift_smartcode_claudeapikey = !empty($greenshift_smartcode_claudeapikey) ? $greenshift_smartcode_claudeapikey : '';
 
@@ -276,7 +284,7 @@ function greenshift_smart_code_ai_settings_callback(){
 	$greenshift_smartcode_deepseekapikey = !empty($greenshift_smartcode_deepseekapikey) ? $greenshift_smartcode_deepseekapikey : '';
 
 	$greenshift_smartcode_openaiapimodel = get_option('greenshift_smartcode_openaiapimodel');
-	$greenshift_smartcode_openaiapimodel = !empty($greenshift_smartcode_openaiapimodel) ? $greenshift_smartcode_openaiapimodel : 'gpt-3.5-turbo';
+	$greenshift_smartcode_openaiapimodel = !empty($greenshift_smartcode_openaiapimodel) ? $greenshift_smartcode_openaiapimodel : 'gpt-4.1-mini';
 	?>
 	<style>
 		.gspb_ai_lab_settings_form{
@@ -296,6 +304,14 @@ function greenshift_smart_code_ai_settings_callback(){
 						<td>
 							<textarea style="width:100%; min-height:50px;border-color:#ddd" id="greenshift_smartcode_openaiapikey" name="greenshift_smartcode_openaiapikey"><?php echo esc_html($greenshift_smartcode_openaiapikey); ?></textarea>
 							<div style="margin-bottom:15px"><a target="_blank" href="https://platform.openai.com/account/api-keys"><?php esc_html_e("Get an API Key", 'greenshift-smart-code-ai'); ?></a></div>
+						</td>
+					</tr>
+					<tr class="geminiapikey">
+						<th>
+							<label for="greenshift_smartcode_geminiapikey"><?php esc_html_e("Gemini API Key", 'greenshift-smart-code-ai'); ?></label>
+						</th>
+						<td>
+							<textarea style="width:100%; min-height:50px;border-color:#ddd" id="greenshift_smartcode_geminiapikey" name="greenshift_smartcode_geminiapikey"><?php echo esc_html($greenshift_smartcode_geminiapikey); ?></textarea>
 						</td>
 					</tr>
 					<tr class="claudeapikey">
@@ -320,17 +336,21 @@ function greenshift_smart_code_ai_settings_callback(){
 						</th>
 						<td>
 							<select name="greenshift_smartcode_openaiapimodel">
-								<option value="gpt-3.5-turbo" <?php selected($greenshift_smartcode_openaiapimodel, 'gpt-3.5-turbo'); ?>> gpt-3.5-turbo </option>
-								<option value="gpt-4" <?php selected($greenshift_smartcode_openaiapimodel, 'gpt-4'); ?>> gpt-4 </option>
-								<option value="gpt-4-turbo" <?php selected($greenshift_smartcode_openaiapimodel, 'gpt-4-turbo'); ?>> gpt-4-turbo </option>
-								<option value="gpt-4-32k" <?php selected($greenshift_smartcode_openaiapimodel, 'gpt-4-32k'); ?>> gpt-4-32k </option>
+								<option value="gpt-4.1" <?php selected($greenshift_smartcode_openaiapimodel, 'gpt-4.1'); ?>> gpt-4.1 </option>
+								<option value="gpt-4.1-mini" <?php selected($greenshift_smartcode_openaiapimodel, 'gpt-4.1-mini'); ?>> gpt-4.1-mini </option>
 								<option value="gpt-4o" <?php selected($greenshift_smartcode_openaiapimodel, 'gpt-4o'); ?>> gpt-4o </option>
 								<option value="gpt-4o-mini" <?php selected($greenshift_smartcode_openaiapimodel, 'gpt-4o-mini'); ?>> gpt-4o-mini </option>
 								<option value="o1" <?php selected($greenshift_smartcode_openaiapimodel, 'o1'); ?>> o1 </option>
 								<option value="o1-mini" <?php selected($greenshift_smartcode_openaiapimodel, 'o1-mini'); ?>> o1-mini </option>
-								<option value="o1-preview" <?php selected($greenshift_smartcode_openaiapimodel, 'o1-preview'); ?>> o1-preview </option>
-								<option value="claude-3-5-sonnet-20241022" <?php selected($greenshift_smartcode_openaiapimodel, 'claude-3-5-sonnet-20241022'); ?>> claude-3-5-sonnet-20241022 </option>
-								<option value="claude-3-5-haiku-20241022" <?php selected($greenshift_smartcode_openaiapimodel, 'claude-3-5-haiku-20241022'); ?>> claude-3-5-haiku-20241022 </option>
+								<option value="o1-pro" <?php selected($greenshift_smartcode_openaiapimodel, 'o1-pro'); ?>> o1-pro </option>
+								<option value="o3-mini" <?php selected($greenshift_smartcode_openaiapimodel, 'o3-mini'); ?>> o3-mini </option>
+								<option value="o3" <?php selected($greenshift_smartcode_openaiapimodel, 'o3'); ?>> o3 </option>
+								<option value="claude-3-7-sonnet-latest" <?php selected($greenshift_smartcode_openaiapimodel, 'claude-3-7-sonnet-latest'); ?>> claude-3-7-sonnet-latest </option>
+								<option value="claude-sonnet-4-20250514" <?php selected($greenshift_smartcode_openaiapimodel, 'claude-sonnet-4-20250514'); ?>> claude-sonnet-4-20250514 </option>
+								<option value="claude-opus-4-20250514" <?php selected($greenshift_smartcode_openaiapimodel, 'claude-opus-4-20250514'); ?>> claude-opus-4-20250514 </option>
+								<option value="deepseek-chat" <?php selected($greenshift_smartcode_openaiapimodel, 'deepseek-chat'); ?>> deepseek-chat </option>
+								<option value="gemini-2.5-pro-preview-05-06" <?php selected($greenshift_smartcode_openaiapimodel, 'gemini-2.5-pro-preview-05-06'); ?>> gemini-2.5-pro-preview-05-06 </option>
+								<option value="gemini-2.5-flash-preview-05-20" <?php selected($greenshift_smartcode_openaiapimodel, 'gemini-2.5-flash-preview-05-20'); ?>> gemini-2.5-flash-preview-05-20 </option>
 								<option value="deepseek-chat" <?php selected($greenshift_smartcode_openaiapimodel, 'deepseek-chat'); ?>> deepseek-chat </option>
 							</select>
 						</td>
@@ -434,27 +454,28 @@ function gspb_get_ai_data(WP_REST_Request $request)
 		$openaiapikey = (!empty($sitesettings['openaiapi'])) ? esc_attr($sitesettings['openaiapi']) : '';
 		$claudeapikey = (!empty($sitesettings['claudeapi'])) ? esc_attr($sitesettings['claudeapi']) : '';
 		$deepseekapikey = (!empty($sitesettings['deepseekapi'])) ? esc_attr($sitesettings['deepseekapi']) : '';
-		$openaiapimodel = (!empty($sitesettings['openaiapimodel'])) ? esc_attr($sitesettings['openaiapimodel']) : 'gpt-3.5-turbo';
+		$openaiapimodel = (!empty($sitesettings['openaiapimodel'])) ? esc_attr($sitesettings['openaiapimodel']) : 'gpt-4.1-mini';
+		$geminiapikey = (!empty($sitesettings['geminiapi'])) ? esc_attr($sitesettings['geminiapi']) : '';
 	} else {
 		$openaiapikey = get_option('greenshift_smartcode_openaiapikey');
 		$claudeapikey = get_option('greenshift_smartcode_claudeapikey');
 		$deepseekapikey = get_option('greenshift_smartcode_deepseekapikey');
-		$openaiapimodel = !empty(get_option('greenshift_smartcode_openaiapimodel')) ? get_option('greenshift_smartcode_openaiapimodel') : 'gpt-3.5-turbo';
-
+		$openaiapimodel = !empty(get_option('greenshift_smartcode_openaiapimodel')) ? get_option('greenshift_smartcode_openaiapimodel') : 'gpt-4.1-mini';
+		$geminiapikey = get_option('greenshift_smartcode_geminiapikey');
 	}
 
-	if(empty( $openaiapikey ) && empty( $claudeapikey ) && empty( $deepseekapikey )){
+	if(empty( $openaiapikey ) && empty( $claudeapikey ) && empty( $deepseekapikey ) && empty( $geminiapikey )){
 		return json_encode(array(
 			'success' => false,
 			'message' => 'You must need to add API key in plugin settings or in Greenshift - Settings - API keys.' ,
 		));
 	}else{
-		if (($openaiapimodel == 'gpt-3.5-turbo' || $openaiapimodel == 'gpt-4' || $openaiapimodel == 'gpt-4-turbo' || $openaiapimodel == 'gpt-4-32k' || $openaiapimodel == 'gpt-4o' || $openaiapimodel == 'gpt-4o-mini' || $openaiapimodel == 'o1' || $openaiapimodel == 'o1-mini' || $openaiapimodel == 'o1-preview' ) && empty( $openaiapikey )) {
+		if (($openaiapimodel == 'gpt-4.1' || $openaiapimodel == 'gpt-4.1-mini' || $openaiapimodel == 'gpt-4o' || $openaiapimodel == 'gpt-4o-mini' || $openaiapimodel == 'o1' || $openaiapimodel == 'o1-mini' || $openaiapimodel == 'o1-pro' || $openaiapimodel == 'o3-mini' || $openaiapimodel == 'o3' ) && empty( $openaiapikey )) {
 			return json_encode(array(
 				'success' => false,
 				'message' => 'You must need to add Open AI API key in plugin settings or in Greenshift - Settings - API keys.' ,
 			));
-		} elseif (($openaiapimodel == 'claude-3-5-sonnet-20241022' || $openaiapimodel == 'claude-3-5-haiku-20241022') && empty( $claudeapikey )) {
+		} elseif (($openaiapimodel == 'claude-sonnet-4-20250514' || $openaiapimodel == 'claude-opus-4-20250514' || $openaiapimodel == 'claude-3-7-sonnet-latest') && empty( $claudeapikey )) {
 			return json_encode(array(
 				'success' => false,
 				'message' => 'You must need to add Claude API key in plugin settings or in Greenshift - Settings - API keys.' ,
@@ -464,10 +485,15 @@ function gspb_get_ai_data(WP_REST_Request $request)
 				'success' => false,
 				'message' => 'You must need to add DeepSeek API key in plugin settings or in Greenshift - Settings - API keys.' ,
 			));
+		} elseif (($openaiapimodel == 'gemini-2.5-pro-preview-05-06' || $openaiapimodel == 'gemini-2.0-flash' || $openaiapimodel == 'gemini-2.5-flash-preview-05-20') && empty( $geminiapikey )) {
+			return json_encode(array(
+				'success' => false,
+				'message' => 'You must need to add Gemini API key in plugin settings or in Greenshift - Settings - API keys.' ,
+			));
 		} else {
 			return json_encode(array(
 				'success' => true,
-				'key' => ($openaiapimodel == 'deepseek-chat' || $openaiapimodel == 'deepseek-reasoner') ? $deepseekapikey : (($openaiapimodel == 'claude-3-5-sonnet-20241022' || $openaiapimodel == 'claude-3-5-haiku-20241022') ? $claudeapikey : $openaiapikey),
+				'key' => ($openaiapimodel == 'deepseek-chat' || $openaiapimodel == 'deepseek-reasoner') ? $deepseekapikey : (($openaiapimodel == 'claude-sonnet-4-20250514' || $openaiapimodel == 'claude-opus-4-20250514' || $openaiapimodel == 'claude-3-7-sonnet-latest') ? $claudeapikey : $openaiapikey),
 				'model' => $openaiapimodel,
 			));
 		}
